@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Code Quiz</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" type="text/css" href="./assets/css/style.css" />
+
+
+
+</head>
+
+
+<body>
+    
+    <header class="header hidden">
+        <div class="btn-unit">
+            <p class="metric">Metric</p>
+            <div class="switch" id="unit">
+                <span class="sliderBg toggle" id="unit"></span>
+                <span class="slider" is="unit"></span>
+            </div>
+            <p class="imperial">Imperial</p>
+        </div>
+        <div class="logo">
+            <h1>WEATHERSPOT</h1>
+        </div>
+    </header>
+    <main class="mainbody hidden">
+        <section class="main grid-container">
+            <div class="menu">MENU
+
+            </div>
+
+            <div class="now">
+                <span id="cityNow"></span><span id="stateNow"></span><span id="date"></span>
+                <div id="tempNow"></div>
+            </div>
+            
+
+            <div class="today">TODAY
+
+            </div>
+
+            <div class="fiveDay">5 DAY
+
+            </div>
+
+        </section>
+
+    </main>
+    
+</body>
+<section id="loader" class="loader"><div id="circle"></div>loading...</section>
+<footer class="footer">
+    <div>
+
+    </div>
+</footer>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.3/dayjs.min.js"
+        integrity="sha256-iu/zLUB+QgISXBLCW/mcDi/rnf4m4uEDO0wauy76x7U=" crossorigin="anonymous"></script>
+    <script src="./assets/js/script.js"></script>
+</html>
