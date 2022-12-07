@@ -1,0 +1,284 @@
+:root {
+    --topBg: rgb(14, 14, 37);
+    --bottomBg: rgb(37, 25, 62);
+    --edgeBox: rgba(0, 112, 250, 0.444);
+    --edgeBoxTransparent: rgba(200, 169, 135, 0.17);
+}
+
+* {
+    margin: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+    
+}
+
+
+
+.loader {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+    background: linear-gradient(var(--topBg), 60%, var(--bottomBg));
+    font-size: 4rem;
+    text-align: center;
+    
+    color: black;
+}
+
+#circle {
+    height: 100px;
+    width: 100px;
+    border: 15px solid lightslategrey;
+    border-top-color:blue;
+    position: absolute;
+    margin: auto;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-radius: 50%;
+    animation: spin 1.5s infinite linear;
+}
+
+@keyframes spin{
+    0%{
+        transform: rotate(0deg);
+        border-top-color: blue;
+    }
+    25%{
+        transform: rotate(90deg);
+        border-top-color: rgb(11, 0, 132);
+    }
+    50%{
+        transform: rotate(180deg);
+        border-top-color: rgb(0, 0, 0);
+    }
+    75%{
+        transform: rotate(270deg);
+        border-top-color: rgb(0, 0, 127);
+    }
+    100%{
+        transform: rotate(360deg);
+        border-top-color: blue;
+    }
+}
+
+.hidden {
+    display: none;
+}
+
+body {
+    min-width: 330px;
+    max-width: 5000px;
+    background: linear-gradient(var(--topBg), 60%, var(--bottomBg));
+    height: 100%;
+}
+
+.flex-horizontal {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 60px;
+    width: 100%;
+    background: linear-gradient(transparent, 90%, var(--edgeBox));
+    border-color: transparent;
+    border-radius: 40px;
+    border-style: solid;
+    border-width: 1px;
+    color: white;
+}
+
+.logo {
+    position: absolute;
+    right: 3%;
+    font-size: 1.2rem;;
+}
+
+.btn-unit,
+.switch {
+    display: flex;
+    position: absolute;
+    left: 3%;
+    flex-direction: row;
+    font-size: 1.5rem;
+    position: relative;
+    align-items: center;
+}
+
+.metric,
+.imperial {
+    margin-left: 0.4rem;
+    margin-right: 0rem;
+    user-select: none;
+}
+
+.sliderBg {
+    position: relative;
+    left: 0em;
+    content: "";
+    width: 2em;
+    height: 1em;
+    background-color: rgb(159, 158, 182);
+    box-shadow: inset 0 0px 5px 2px rgb(13, 22, 26);
+    border-radius: 1em;
+    margin-right: .25em;
+    cursor: pointer;
+}
+
+.slider {
+    position: absolute;
+    left: 0.1em;
+    content: "";
+    width: 0.8em;
+    height: 0.8em;
+    background: linear-gradient(to bottom, rgb(111, 134, 247), rgb(6, 4, 96));
+    border-radius: 1em;
+    margin-right: .25em;
+    transition: 300ms ease-in-out;
+    cursor: pointer;
+}
+
+.btnMetric {
+    left: 0.2em;
+}
+
+.btnImperial {
+    left: 1.0em;
+}
+
+.main {
+    color:white;
+    font-size: 1.8rem;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-areas: 
+        "menu now"
+        "menu today"
+        "menu fiveDay";
+    grid-gap: 20px;
+    grid-template-columns: 1fr 5fr;
+    grid-auto-rows: 400px;
+    margin: 20px;
+}
+
+.menu, .now, .today, .fiveDay {
+    
+    padding: 20px;
+    background: linear-gradient(rgb(40, 35, 35, 0.25), 95%, var(--edgeBoxTransparent));
+    border-color: transparent;
+    border-radius: 40px;
+    border-style: solid;
+    border-width: 1px;
+    color: white;
+}
+
+.menu {
+    grid-area: menu;
+
+}
+
+.now {
+    grid-area: now;
+}
+
+.today {
+    grid-area: today;
+}
+
+.fiveDay {
+    grid-area: fiveDay;
+}
+
+
+
+.footer {
+    background: rgb(71, 68, 68, 0.3);
+    border-radius: 20px;
+    border-color: var(--edgeBox);
+    border-radius: 40px;
+    border-style: solid;
+    border-width: 1px;
+    padding: 20px;
+    height: 200px;
+    margin-right: 20px;
+    margin-left: 20px;
+}
+
+
+
+
+
+@media (min-width: 580px) {
+    .sliderBg:hover {
+        scale: 1 1.1;
+
+    }
+
+    .slider:hover {
+        background-color: rgb(151, 158, 228);
+        box-shadow: inset 0 0px 5px 3px rgb(201, 198, 232);
+    }
+
+    
+}
+
+@media (max-width: 580px) {
+
+    .flex-horizontal {
+        font-size: 0.8rem;
+        height: 40px;
+    }
+
+    .btn-unit {
+        scale: 80%;
+        left: -20px;
+    }
+
+    .logo {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 476px) {
+
+    .flex-horizontal {
+        font-size: 0.6rem;
+        max-width: 600px;
+        min-width: 330px;
+    }
+
+    .btn-unit {
+        scale: 60%;
+        left: -40px;
+    }
+
+    .logo {
+        font-size: .7rem;
+    }
+
+}
+
+@media (max-width: 340px) {
+
+    .flex-horizontal {
+        font-size: 0.6rem;
+        width: 330px;
+        height: 80px;
+        flex-direction: column;
+
+    }
+
+    .btn-unit {
+        scale: 60%;
+        position: absolute;
+        left: auto;
+        top: 40px;
+    }
+
+    .logo {
+        top: 5px;
+        right: auto;
+    }
+}
