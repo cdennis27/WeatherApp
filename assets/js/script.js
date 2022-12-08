@@ -10,6 +10,10 @@ var x = -1;
 const header = document.querySelector('.header');
 const main = document.querySelector('.mainbody');
 const loader = document.querySelector('#loader');
+const search = document.querySelector('#search-box');
+const matchList = document.querySelector('#match-list');
+const clearMatchListBtn = document.querySelector('#clear-match-list');
+const searchBtn = document.querySelector('#search-btn');
 
 
 
@@ -19,7 +23,7 @@ async function showInit() {
 
     //arrow function for demonstration purposes of other method for function
 
-    await showDate();
+    await showCity();
     await sleep(2000);
     showWeather();
 
@@ -31,8 +35,9 @@ $('#date').text(today.format('hh : mm a. MMM D, YYYY.'));
 addUnit.addEventListener("click", addedUnit);
 
 function showLoader() {
-    header.classList.add('hidden');
-    //loader.classList.remove('hidden');
+    header.setAttribute('class', 'header flex-horizontal');
+    main.setAttribute('class', 'mainbody');
+    loader.setAttribute('class', "hidden");
 };
 
 function hideLoader() {
@@ -61,11 +66,19 @@ function showWeather() {
 
         .then((weatherNow) => {
             console.log(weatherNow.cod);
-
+//debugger;
             if (weatherNow.cod === "200") {
                 console.log(weatherNow);
-                $('#tempNow').text("Now: " + weatherNow.list[0].main.temp.toFixed(0)
+                $('#temp-now').text(weatherNow.list[0].main.temp.toFixed(0)
                     + "°C");
+                    $('#wind-now').text("Wind speed: " + weatherNow.list[0].wind.speed.toFixed(0)
+                    + "m/s");
+                    $('#humidity-now').text("Humidity: " + weatherNow.list[0].main.humidity.toFixed(0)
+                    + "%");
+                    $('#visibility-now').text("Visibility: " + weatherNow.list[0].visibility.toFixed(0)
+                    + "m");
+                    $('#precipitation-now').text("Precipitation: " + weatherNow.list[0].pop.toFixed(0)
+                    + "mm");
                 const myJSON = JSON.stringify(weatherNow);
                 console.log('Weather first function: ' + weatherNow.list[0].main.temp);
                 console.log("Weather JSON:" + myJSON);
@@ -82,7 +95,7 @@ function showWeather() {
         .catch((error) => {
             console.log(`Unable to display weather`);
             console.log("Didn't find your weather");
-            $('#tempNow').text("Select a city!");
+            $('#temp-now').text("Select a city!");
             //$('#stateNow').text("Ontario, ");
             //$('#exampleModal1').foundation('open');
             x--;
@@ -94,8 +107,8 @@ function showWeather() {
 
 }
 
-function showDate() {
-    //showLoader();
+function showCity() {
+    
     fetch("https://geolocation-db.com/json/")
         .then(response => response.json())
         .then((locationNow) => {
@@ -106,16 +119,16 @@ function showDate() {
             if (locationNow != undefined) {
 
                 console.log('This is your city: ' + locationNow.city);
-                $('#cityNow').text(locationNow.city + ", ");
-                $('#stateNow').text(locationNow.state + ", ");
+                $('#city-now').text(locationNow.city + ", ");
+                $('#state-now').text(locationNow.state + ", ");
 
                 cityAsked = (locationNow.city);
-                //cityAsked = cityAsked.split(" ").join("&nbsp");
+                cityAsked = cityAsked.split(" ").join("&nbsp");
                 return;
             }
             else if (locationNow.city == undefined) {
-                $('#cityNow').text("Toronto, ");
-                $('#stateNow').text("Ontario, ");
+                $('#city-now').text("Toronto, ");
+                $('#state-now').text("Ontario, ");
                 console.log("Didn't find your city" + locationNow.city);
             }
 
@@ -124,8 +137,8 @@ function showDate() {
         .catch((error) => {
             alert(`Unable to find your city, please choose your city!`);
             console.log("Didn't find your city");
-            $('#cityNow').text("Toronto, ");
-            $('#stateNow').text("Ontario, ");
+            $('#city-now').text("Toronto, ");
+            $('#state-now').text("Ontario, ");
             //$('#exampleModal1').foundation('open');
         });
 
@@ -140,14 +153,14 @@ function addedUnit() {
 
     if (unit == "metric") {
         unit = "imperial";
-        btnUnit.classList.remove('btnMetric');
-        btnUnit.classList.add('btnImperial');
+        btnUnit.classList.remove('btn-metric');
+        btnUnit.classList.add('btn-imperial');
         localStorage.setItem("unit", unit);
     } else if (unit == "imperial") {
         unit = "metric";
-        btnUnit.classList.add('btnMetric');
-        btnUnit.classList.remove('btnImperial');
-        /*btnUnit.setAttribute("class", "slider btnMetric");*/
+        btnUnit.classList.add('btn-metric');
+        btnUnit.classList.remove('btn-imperial');
+        /*btnUnit.setAttribute("class", "slider btn-metric");*/
         localStorage.setItem("unit", unit);
     } else {
         initUnit();
@@ -159,12 +172,12 @@ function initUnit() {
     if (unit == undefined) {
         unit = "metric";
         localStorage.setItem("unit", unit);
-        btnUnit.classList.add('btnMetric');
+        btnUnit.classList.add('btn-metric');
     } else if (unit == "metric") {
-        btnUnit.classList.add('btnMetric');
+        btnUnit.classList.add('btn-metric');
 
     } else {
-        btnUnit.classList.add('btnImperial');
+        btnUnit.classList.add('btn-imperial');
 
     }
     console.log(unit);
@@ -173,3 +186,16 @@ function initUnit() {
 console.log(weatherLink);
 console.log("WeatherNow end:" + weatherNow);
 initUnit();
+
+//Search cities.json
+const searchStates = async searchText => {
+    const response = await fetch('./assets/js/cities.json');
+    const states = await response.json();
+
+    console.log(states);
+}
+
+search.addEventListener('input', () => searchStates(search.value));
+
+
+

@@ -112,7 +112,7 @@ body {
     user-select: none;
 }
 
-.sliderBg {
+.slider-bg {
     position: relative;
     left: 0em;
     content: "";
@@ -138,11 +138,11 @@ body {
     cursor: pointer;
 }
 
-.btnMetric {
+.btn-metric {
     left: 0.2em;
 }
 
-.btnImperial {
+.btn-imperial {
     left: 1.0em;
 }
 
@@ -156,14 +156,14 @@ body {
     grid-template-areas: 
         "menu now"
         "menu today"
-        "menu fiveDay";
+        "menu five-day";
     grid-gap: 20px;
     grid-template-columns: 1fr 5fr;
     grid-auto-rows: 400px;
     margin: 20px;
 }
 
-.menu, .now, .today, .fiveDay {
+.menu, .now, .today, .five-day {
     
     padding: 20px;
     background: linear-gradient(rgb(40, 35, 35, 0.25), 95%, var(--edgeBoxTransparent));
@@ -176,7 +176,44 @@ body {
 
 .menu {
     grid-area: menu;
+    font-size: 0.7em;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 
+.search-container {
+    display: flex;
+    color: white;
+    padding: 5px;
+    border-color: white;
+    border-width: 2px;
+    border-style: solid;
+    width: 100%;
+}
+
+.search-box {
+    display: flex;
+    flex-direction: row;
+    padding: 5px;
+}
+
+.header-match-list {
+    font-size: 0.8em;
+    position: relative;
+    left: 0;
+    display: flex;
+}
+
+#clear-match-list {
+    font-size: 0.6em;
+    cursor: pointer;
+    display: flex;
+    position: relative;
+    color:rgb(151, 158, 228);
+    left: 50%;
+    top:20%;
 }
 
 .now {
@@ -211,7 +248,7 @@ body {
 
 
 @media (min-width: 580px) {
-    .sliderBg:hover {
+    .slider-bg:hover {
         scale: 1 1.1;
 
     }
