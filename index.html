@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Code Quiz</title>
+    <title>Weather Spot</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" type="text/css" href="./assets/css/style.css" />
@@ -29,15 +29,17 @@
     </header>
     <main class="mainbody hidden">
         <section class="main grid-container">
-            <div class="menu">Search by city:
+            <div class="menu">Search by Country:
                 <div class="search-box">
-                    <input id="search-box" type="text" placeholder="Enter city name"><button id="search-btn">O</button>
+                    <input id="search-box" type="text" placeholder="Enter Country name">
+                    
                 </div>
                 <section class="search-container">
                     <div class="header-match-list">History</div>
                     <a id="clear-match-list"> Clear all</a>
 
                 </section>
+                <input id="search-cities" class="hidden" type="text" placeholder="Enter City name" >
                 <div id="match-list"></div>
             </div>
 
@@ -76,5 +78,5 @@
 <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.3/dayjs.min.js"
     integrity="sha256-iu/zLUB+QgISXBLCW/mcDi/rnf4m4uEDO0wauy76x7U=" crossorigin="anonymous"></script>
 <script src="./assets/js/script.js"></script>
-
+<script src="./assets/js/cities.js"></script>
 </html>

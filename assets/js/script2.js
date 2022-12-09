@@ -17,12 +17,7 @@ const searchBtn = document.querySelector('#search-btn');
 let all_countries = [];
 const countries_json = [];
 var storedCities = localStorage.getItem("storedCities");
-var citiesList = [];
 
-const searchCity = document.querySelector('#search-cities');
-$(searchCity).on('input', function (element) {
-    filterCityNames(element.target.value);
-});
 
 
 
@@ -218,7 +213,6 @@ function collectCountries() {
 }
 
 function filterCountriesNames(input) {
-    
     let input_uc = input.toUpperCase();
     let matched_items = [];
     if (input) {
@@ -254,13 +248,9 @@ function showCitiesList(country) {
     $(matchList).html("");
     // Visual structure
 
-    $(matchList).html(`<div>${country}:</div><button id="search-btn" placeholder="Choose city">Search</button><ul class="cities-list" id="cities-list"></ul>`);
-    
+    $(matchList).html(`<div>${country}:</div><ul class="cities-list" id="cities-list"></ul>`);
     // Load list
-    
-    citiesList = [];
-    citiesList = (countries[country]);
-    console.log(citiesList);
+    debugger;
 
     for (let i = 0; i < countries[country].length; i++) {
         let city = countries[country][i];
@@ -271,43 +261,17 @@ function showCitiesList(country) {
             console.log(city);
         });
     }
-    searchCity.classList.remove('hidden');
-}
 
-
-
-function filterCityNames(inputc) {
-    
-    //let inputc = searchCity.value;
-    let input_uc = inputc[0].toUpperCase() + inputc.substring(1);
-    
-    //let input_uc = inputc.toUpperCase();
-    let matched_cities = [];
-    if (inputc) {
-        matched_cities = citiesList.filter((item) => {
-            return item.startsWith(input_uc);
+    /*for (let i = 0; i < countriesList.length; i++) {
+        // Change the case of letters to 'Abc' mode
+        let country = countriesList[i].charAt(0).toUpperCase() + countriesList[i].toLowerCase().slice(1);
+        $(matchList).append(`<div id="country_${i}">${country}</div>`);
+        $("#country_" + i).on('click', () => {
+            showCitiesList(country);
+            console.log(country);
         });
-        console.log("matched cities: " + matched_cities);
-        searchCity.setAttribute('class', "show");
-        
-        ///
-$("#cities-list").html("");
-$('#search-btn').text("Choose a city");
-        for (let i = 0; i < matched_cities.length; i++) {
-            let city = matched_cities[i];
-            $("#cities-list").append(`<li id="cities_${i}">${city}</li>`);
-            //$("#my-input").val(country);
-            $("#cities_" + i).on('click', () => {
-                $('#search-btn').text(city);
-                console.log(city);
-                ///// add function to fetch in here!!!!!!!
-            });
-        }
-        
-        //showAutocomplete(matched_items);
-    }
+    }*/
 }
-
 
 
 
