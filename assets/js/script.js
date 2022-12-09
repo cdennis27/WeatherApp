@@ -18,7 +18,7 @@ let all_countries = [];
 const countries_json = [];
 var storedCities = localStorage.getItem("storedCities");
 var citiesList = [];
-
+var countryNow;
 const searchCity = document.querySelector('#search-cities');
 $(searchCity).on('input', function (element) {
     filterCityNames(element.target.value);
@@ -63,7 +63,7 @@ function showWeather() {
     console.log("x:" + x);
 
     if (x <= -7) {
-
+        alert(`Unable to find your city, please choose your city!`);
         header.setAttribute('class', 'header flex-horizontal');
         main.setAttribute('class', 'mainbody');
         loader.setAttribute('class', "hidden");
@@ -146,11 +146,12 @@ function showCity() {
 
         })
         .catch((error) => {
-            alert(`Unable to find your city, please choose your city!`);
+            
             console.log("Didn't find your city");
             $('#city-now').text("Toronto, ");
             $('#state-now').text("Ontario, ");
             //$('#exampleModal1').foundation('open');
+            return;
         });
 
 }
@@ -200,6 +201,7 @@ initUnit();
 
 //Search cities.js
 
+
 $(document).ready(function () {
     console.log($(countries));
     collectCountries();
@@ -218,7 +220,7 @@ function collectCountries() {
 }
 
 function filterCountriesNames(input) {
-    
+
     let input_uc = input.toUpperCase();
     let matched_items = [];
     if (input) {
@@ -255,17 +257,20 @@ function showCitiesList(country) {
     // Visual structure
 
     $(matchList).html(`<div>${country}:</div><button id="search-btn" placeholder="Choose city">Search</button><ul class="cities-list" id="cities-list"></ul>`);
-    
+
     // Load list
-    
+
     citiesList = [];
     citiesList = (countries[country]);
     console.log(citiesList);
+    countryNow = country;
+
+    console.log("Country is:" + country);
 
     for (let i = 0; i < countries[country].length; i++) {
         let city = countries[country][i];
         $("#cities-list").append(`<li id="cities_${i}">${city}</li>`);
-        $("#my-input").val(country);
+        //$("#my-input").val(country);
         $("#cities_" + i).on('click', () => {
             $('#search-btn').text(city);
             console.log(city);
@@ -277,11 +282,24 @@ function showCitiesList(country) {
 
 
 function filterCityNames(inputc) {
-    
+
     //let inputc = searchCity.value;
-    let input_uc = inputc[0].toUpperCase() + inputc.substring(1);
+
+    let words = inputc.split(" ");
+    console.log(words);
+
+    for (let i = 0; i < words.length; i++) {
+        if (words[i] != "") {
+            words[i] = words[i][0].toUpperCase() + words[i].substr(1);
+        }
+
+    }
+
+    words.join(" ");
+    console.log(words);
+    let input_uc = words.join(" ");
+    console.log(input_uc);
     
-    //let input_uc = inputc.toUpperCase();
     let matched_cities = [];
     if (inputc) {
         matched_cities = citiesList.filter((item) => {
@@ -289,10 +307,10 @@ function filterCityNames(inputc) {
         });
         console.log("matched cities: " + matched_cities);
         searchCity.setAttribute('class', "show");
-        
+
         ///
-$("#cities-list").html("");
-$('#search-btn').text("Choose a city");
+        $("#cities-list").html("");
+        $('#search-btn').text("Choose a city");
         for (let i = 0; i < matched_cities.length; i++) {
             let city = matched_cities[i];
             $("#cities-list").append(`<li id="cities_${i}">${city}</li>`);
@@ -301,9 +319,25 @@ $('#search-btn').text("Choose a city");
                 $('#search-btn').text(city);
                 console.log(city);
                 ///// add function to fetch in here!!!!!!!
+                $('#city-now').text(city + ", " + countryNow + ", ");
+                $('#state-now').text("");
+                $('#search-btn').text(city);
+                //$("#cities-list").html("");
+                x = -1;
+                cityAsked = (city);
+                cityAsked = cityAsked.split(" ").join("&nbsp");
+
+
+                cityAsked = city;
+
+                
+                header.setAttribute('class', 'opacityLoading header flex-horizontal');
+                main.setAttribute('class', 'opacityLoading mainbody');
+                loader.setAttribute('class', "show");
+                showWeather();
             });
         }
-        
+
         //showAutocomplete(matched_items);
     }
 }
