@@ -270,7 +270,9 @@ body {
     grid-area: fiveDay;
 }
 
-
+.opacityLoading {
+    opacity: 0.2;
+}
 
 .footer {
     background: rgb(71, 68, 68, 0.3);
