@@ -1,4 +1,4 @@
-{
+const countries = {
     "Afghanistan": [
       "Herat",
       "Kabul",
@@ -84143,4 +84143,5 @@
       "Mutare",
       "Victoria Falls"
     ]
+  
   }
