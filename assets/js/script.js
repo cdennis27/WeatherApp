@@ -19,6 +19,7 @@ const countries_json = [];
 var storedCities = localStorage.getItem("storedCities");
 var citiesList = [];
 var countryNow;
+var code;
 const searchCity = document.querySelector('#search-cities');
 $(searchCity).on('input', function (element) {
     filterCityNames(element.target.value);
@@ -204,6 +205,7 @@ initUnit();
 
 $(document).ready(function () {
     console.log($(countries));
+    console.log(codes);
     collectCountries();
     $(search).on('input', function (element) {
         filterCountriesNames(element.target.value);
@@ -264,8 +266,9 @@ function showCitiesList(country) {
     citiesList = (countries[country]);
     console.log(citiesList);
     countryNow = country;
+    code = (codes[country]);
 
-    console.log("Country is:" + country);
+    console.log("Code is:" + code +"Country is: " + country);
 /*
     for (let i = 0; i < countries[country].length; i++) {
         let city = countries[country][i];

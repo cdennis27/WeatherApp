@@ -194,9 +194,10 @@ body {
     border-width: 1px;
 }
 
-.search-cities {
+#search-cities {
     margin-top: 10px;
     margin-bottom: 5px;
+    width: 100%;
 }
 
 .search-container {
@@ -312,6 +313,23 @@ body {
     height: 200px;
     margin-right: 20px;
     margin-left: 20px;
+}
+
+@media (max-width: 880px){
+
+.grid-container {
+    display: grid;
+    grid-template-areas:
+        "menu" 
+        "now"
+        "today"
+        "five-day";
+    grid-gap: 20px;
+    grid-template-columns: 1fr;
+    grid-auto-rows: 600px;
+    margin: 20px;
+}
+
 }
 
 @media (min-width: 580px) {
