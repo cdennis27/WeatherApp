@@ -236,7 +236,7 @@ function showAutocomplete(countriesList) {
     $(matchList).html("");
     // Animation
     $(matchList).animate({
-        height: '300px'
+        height: 'auto'
     }, "fast");
     // Load new values
     for (let i = 0; i < countriesList.length; i++) {
@@ -256,7 +256,7 @@ function showCitiesList(country) {
     $(matchList).html("");
     // Visual structure
 
-    $(matchList).html(`<div>${country}:</div><button id="search-btn" placeholder="Choose city">Search</button><ul class="cities-list" id="cities-list"></ul>`);
+    $(matchList).html(`<div>${country}:</div><p id="search-btn" placeholder="Choose city"></p><ul class="cities-list" id="cities-list"></ul>`);
 
     // Load list
 
@@ -266,7 +266,7 @@ function showCitiesList(country) {
     countryNow = country;
 
     console.log("Country is:" + country);
-
+/*
     for (let i = 0; i < countries[country].length; i++) {
         let city = countries[country][i];
         $("#cities-list").append(`<li id="cities_${i}">${city}</li>`);
@@ -275,7 +275,7 @@ function showCitiesList(country) {
             $('#search-btn').text(city);
             console.log(city);
         });
-    }
+    }*/
     searchCity.classList.remove('hidden');
 }
 
@@ -322,14 +322,17 @@ function filterCityNames(inputc) {
                 $('#city-now').text(city + ", " + countryNow + ", ");
                 $('#state-now').text("");
                 $('#search-btn').text(city);
-                //$("#cities-list").html("");
+                $("#cities-list").text("");
+                $("#match-list").text("");
+                $(search).text("");
+                $(searchCity).text("");
                 x = -1;
                 cityAsked = (city);
                 cityAsked = cityAsked.split(" ").join("&nbsp");
 
 
                 cityAsked = city;
-
+                
                 
                 header.setAttribute('class', 'opacityLoading header flex-horizontal');
                 main.setAttribute('class', 'opacityLoading mainbody');
