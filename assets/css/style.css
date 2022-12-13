@@ -345,6 +345,59 @@ body {
 
 .today {
     grid-area: today;
+    font-size: 0.7em;
+    display: grid;
+    grid-template-areas:
+        "today-header today-header today-header today-header"
+        "time-0 time-1 time-2 time-3";
+    grid-gap: 10px;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 8fr;
+}
+
+.today-header {
+    grid-area: today-header;
+    font-size: 1.05em;
+}
+
+#time-0, #time-1, #time-2, #time-3 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.time-0 {
+    grid-area: time-0;
+}
+
+.time-1 {
+    grid-area: time-1;
+}
+
+.time-2 {
+    grid-area: time-2;
+}
+
+.time-3 {
+    grid-area: time-3;
+}
+
+.time-0, .time-1, .time-2, .time-3 {
+    font-size: 1em;
+    text-align: center;
+    justify-content: center;
+    padding: 5px;
+}
+
+#precipitation-0, #precipitation-1, #precipitation-2, #precipitation-3 {
+    font-size: 0.7em;
+}
+
+#icon-0 img, #icon-1 img, #icon-2 img, #icon-3 img {
+    width: 100px;
+    height: 100px;
+    
+    
 }
 
 .fiveDay {
