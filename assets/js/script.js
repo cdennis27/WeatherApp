@@ -1,3 +1,4 @@
+// Introduce the variables
 var addUnit = document.querySelector('#unit');
 var unit = localStorage.getItem("unit");
 var btnUnit = document.querySelector('.slider');
@@ -26,6 +27,8 @@ var latitudeAsked;
 var latLongLink;
 var z = -1;
 var coordinatesNow = [];
+var y = -1;
+var timeWhere = [];
 
 // Functions on load:
 showInit();
@@ -50,8 +53,6 @@ $(document).ready(function () {
         filterCountriesNames(element.target.value);
     });
 });
-
-
 
 // First Information fetch
 
@@ -115,7 +116,6 @@ function showCity() {
             console.log("Didn't find your city");
             $('#city-now').text("Toronto, ");
             $('#state-now').text("Ontario, ");
-            //$('#exampleModal1').foundation('open');
             return;
         });
 
@@ -124,7 +124,7 @@ function showCity() {
 //Fetch weather info and display it
 
 function showWeather() {
-    weatherLink = (`https://api.openweathermap.org/data/2.5/forecast?lat=${latitudeAsked}&lon=${longitudeAsked}&appid=4dd7b444d35c5781eda9fee4131ca26d&units=${unit}`);
+    weatherLink = (`https://api.openweathermap.org/data/2.5/weather?lat=${latitudeAsked}&lon=${longitudeAsked}&appid=4dd7b444d35c5781eda9fee4131ca26d&units=${unit}`);
     console.log(`Testing weatherLink: ${weatherLink}`);
 
     //weatherLink = (`https://api.openweathermap.org/data/2.5/forecast?q=${cityAsked}&mode=json&units=metric&appid=4dd7b444d35c5781eda9fee4131ca26d`);
@@ -146,66 +146,59 @@ function showWeather() {
         .then((weatherNow) => {
             console.log(weatherNow.cod);
             //debugger;
-            if (weatherNow.cod === "200") {
+            if (weatherNow.cod === 200) {
                 console.log(weatherNow);
+                // Now
                 if (unit == "metric") {
-                    $('#temp-now').text(weatherNow.list[0].main.temp.toFixed(0)
+                    $('#temp-now').text(weatherNow.main.temp.toFixed(0)
                         + "°C");
                 }
                 else if (unit == "imperial") {
-                    $('#temp-now').text(weatherNow.list[0].main.temp.toFixed(0)
+                    $('#temp-now').text(weatherNow.main.temp.toFixed(0)
                         + "°F");
                 };
                 if (unit == "metric") {
-                    $('#wind-now').text("Wind speed: " + (weatherNow.list[0].wind.speed.toFixed(4) * 3.6).toFixed(2)
+                    $('#wind-now').text("Wind speed: " + (weatherNow.wind.speed.toFixed(4) * 3.6).toFixed(2)
                         + " KM/H");
                 }
                 else if (unit == "imperial") {
-                    $('#wind-now').text("Wind speed: " + weatherNow.list[0].wind.speed.toFixed(2)
+                    $('#wind-now').text("Wind speed: " + weatherNow.wind.speed.toFixed(2)
                         + " MP/H");
                 };
 
-                $('#humidity-now').text("Humidity: " + weatherNow.list[0].main.humidity.toFixed(0)
+                $('#humidity-now').text("Humidity: " + weatherNow.main.humidity.toFixed(0)
                     + "%");
 
                 if (unit == "metric") {
-                    $('#visibility-now').text("Visibility: " + weatherNow.list[0].visibility.toFixed(0)
+                    $('#visibility-now').text("Visibility: " + weatherNow.visibility.toFixed(0)
                         + " Meters");
                 }
                 else if (unit == "imperial") {
-                    $('#visibility-now').text("Visibility: " + (weatherNow.list[0].visibility.toFixed(0) * 3.28084).toFixed(0)
+                    $('#visibility-now').text("Visibility: " + (weatherNow.visibility.toFixed(0) * 3.28084).toFixed(0)
                         + " Feet");
                 };
 
                 if (unit == "metric") {
-                    $('#precipitation-now').text("Precipitation: " + weatherNow.list[0].pop.toFixed(0)
-                        + " mm");
+                    $('#precipitation-now').text("Condition: " + weatherNow.weather[0].description
+                        + "");//mm
                 }
                 else if (unit == "imperial") {
-                    $('#precipitation-now').text("Precipitation: " + (weatherNow.list[0].pop.toFixed(0) * 0.0393701).toFixed(2)
-                        + " inches");
+                    $('#precipitation-now').text("Condition: " + weatherNow.weather[0].description //(weatherNow.pop.toFixed(0) * 0.0393701).toFixed(2)
+                        + "");//inches
                 };
 
-                $('#iconNow').html(`<img src="assets/icons/${weatherNow.list[0].weather[0].icon}.png" alt="Weather icon">`);
-                console.log(weatherNow.list[0].weather[0].icon);
+                $('#iconNow').html(`<img src="assets/icons/${weatherNow.weather[0].icon}.png" alt="Weather icon">`);
+
+
+
+
+                console.log(weatherNow.weather[0].icon);
 
 
                 const myJSON = JSON.stringify(weatherNow);
-                console.log('Weather first function: ' + weatherNow.list[0].main.temp);
-                console.log('Weather first function: ' + weatherNow.list[1].main.temp);
-                console.log('Weather first function: ' + weatherNow.list[2].main.temp);
-                console.log('Weather first function: ' + weatherNow.list[3].main.temp);
-                console.log('Weather first function: ' + weatherNow.list[4].main.temp);
-                console.log('Weather first function: ' + weatherNow.list[5].main.temp);
-                console.log('Weather first function: ' + weatherNow.list[6].main.temp);
-                console.log('Weather first function: ' + weatherNow.list[7].main.temp);
-
-
 
                 console.log("Weather JSON:" + myJSON);
                 //hideLoader();
-
-
                 header.setAttribute('class', 'header flex-horizontal');
                 main.setAttribute('class', 'mainbody');
                 loader.setAttribute('class', "hidden");
@@ -230,9 +223,237 @@ function showWeather() {
 
         });
     console.log(weatherLink);
+
+    showLongWeather();
+
+}
+// Fetch 5 day forecast
+
+function showLongWeather() {
+    weatherLink = (`https://api.openweathermap.org/data/2.5/forecast?lat=${latitudeAsked}&lon=${longitudeAsked}&appid=4dd7b444d35c5781eda9fee4131ca26d&units=${unit}`);
+    console.log(`Testing weatherLink: ${weatherLink}`);
+
+    console.log("y:" + y);
+
+    if (y <= -7) {
+        alert(`Unable to find your city, please choose your city!`);
+        header.setAttribute('class', 'header flex-horizontal');
+        main.setAttribute('class', 'mainbody');
+        loader.setAttribute('class', "hidden");
+        return;
+    }
+
+    fetch(weatherLink)
+
+        .then(response => response.json())
+
+        .then((weatherNow) => {
+            console.log(weatherNow.cod);
+            //debugger;
+            if (weatherNow.cod === "200") {
+                console.log(weatherNow);
+                //time-0
+                let portion = weatherNow.list[0].dt_txt.split('');
+                portion = portion[11] + portion[12];
+                if (portion > 12) {
+                    portion = portion - 12;
+                    $('#time-0').text(portion
+                        + " PM");
+                }
+                else if (portion == 00) {
+                    $('#time-0').text("Midnight");
+
+                }
+                else if (portion < 12) {
+                    $('#time-0').text(portion[1]
+                        + " AM");
+                }
+                else if (portion == 12) {
+                    $('#time-0').text("Noon");
+                }
+                ;
+
+                if (unit == "metric") {
+                    $('#temp-0').text(weatherNow.list[0].main.temp.toFixed(0)
+                        + "°C");
+                }
+                else if (unit == "imperial") {
+                    $('#temp-0').text(weatherNow.list[0].main.temp.toFixed(0)
+                        + "°F");
+                };
+
+                if (unit == "metric") {
+                    $('#precipitation-0').text("Precipitation: " + weatherNow.list[0].pop.toFixed(2)
+                        + " mm");
+                }
+                else if (unit == "imperial") {
+                    $('#precipitation-0').text("Precipitation: " + (weatherNow.list[0].pop.toFixed(0) * 0.0393701).toFixed(2)
+                        + " inches");
+                };
+
+                $('#icon-0').html(`<img src="assets/icons/${weatherNow.list[0].weather[0].icon}.png" alt="Weather icon">`);
+
+                //time-1
+                portion = weatherNow.list[1].dt_txt.split('');
+                portion = portion[11] + portion[12];
+                if (portion > 12) {
+                    portion = portion - 12;
+                    $('#time-1').text(portion
+                        + " PM");
+                }
+                else if (portion < 12 && portion != 00) {
+                    $('#time-1').text(portion[1]
+                        + " AM");
+                }
+                else if (portion == 12) {
+                    $('#time-1').text("Noon");
+                }
+                else if (portion == 00) {
+                    $('#time-1').text("Midnight");
+
+                };
+
+                if (unit == "metric") {
+                    $('#temp-1').text(weatherNow.list[1].main.temp.toFixed(0)
+                        + "°C");
+                }
+                else if (unit == "imperial") {
+                    $('#temp-1').text(weatherNow.list[1].main.temp.toFixed(0)
+                        + "°F");
+                };
+
+                if (unit == "metric") {
+                    $('#precipitation-1').text("Precipitation: " + weatherNow.list[1].pop.toFixed(2)
+                        + " mm");
+                }
+                else if (unit == "imperial") {
+                    $('#precipitation-1').text("Precipitation: " + (weatherNow.list[1].pop.toFixed(0) * 0.0393701).toFixed(2)
+                        + " inches");
+                };
+
+                $('#icon-1').html(`<img src="assets/icons/${weatherNow.list[1].weather[0].icon}.png" alt="Weather icon">`);
+
+                //time-2
+                portion = weatherNow.list[2].dt_txt.split('');
+                portion = portion[11] + portion[12];
+
+                if (portion > 12) {
+                    portion = portion - 12;
+                    $('#time-2').text(portion
+                        + " PM");
+                }
+                else if (portion == 00) {
+                    $('#time-2').text("Midnight");
+
+                }
+                else if (portion < 12 && portion != 0) {
+
+                    $('#time-2').text(portion[1]
+                        + " AM");
+                }
+                else if (portion == 12) {
+                    $('#time-2').text("Noon");
+                };
+
+                if (unit == "metric") {
+                    $('#temp-2').text(weatherNow.list[2].main.temp.toFixed(0)
+                        + "°C");
+                }
+                else if (unit == "imperial") {
+                    $('#temp-2').text(weatherNow.list[2].main.temp.toFixed(0)
+                        + "°F");
+                };
+
+                if (unit == "metric") {
+                    $('#precipitation-2').text("Precipitation: " + weatherNow.list[2].pop.toFixed(2)
+                        + " mm");
+                }
+                else if (unit == "imperial") {
+                    $('#precipitation-2').text("Precipitation: " + (weatherNow.list[2].pop.toFixed(0) * 0.0393701).toFixed(2)
+                        + " inches");
+                };
+
+                $('#icon-2').html(`<img src="assets/icons/${weatherNow.list[2].weather[0].icon}.png" alt="Weather icon">`);
+                console.log(weatherNow.list[2].weather[0].icon);
+
+                //time-3
+                portion = weatherNow.list[3].dt_txt.split('');
+                portion = portion[11] + portion[12];
+                if (portion > 12) {
+                    portion = portion - 12;
+                    $('#time-3').text(portion
+                        + " PM");
+                }
+                else if (portion < 12 && portion != 00) {
+                    $('#time-3').text(portion[1]
+                        + " AM");
+                }
+                else if (portion == 12) {
+                    $('#time-3').text("Noon");
+                }
+                else if (portion == 00) {
+                    $('#time-3').text("Midnight");
+
+                };
+
+                if (unit == "metric") {
+                    $('#temp-3').text(weatherNow.list[1].main.temp.toFixed(0)
+                        + "°C");
+                }
+                else if (unit == "imperial") {
+                    $('#temp-3').text(weatherNow.list[1].main.temp.toFixed(0)
+                        + "°F");
+                };
+
+                if (unit == "metric") {
+                    $('#precipitation-3').text("Precipitation: " + weatherNow.list[3].pop.toFixed(2)
+                        + " mm");
+                }
+                else if (unit == "imperial") {
+                    $('#precipitation-3').text("Precipitation: " + (weatherNow.list[3].pop.toFixed(0) * 0.0393701).toFixed(2)
+                        + " inches");
+                };
+
+                $('#icon-3').html(`<img src="assets/icons/${weatherNow.list[3].weather[0].icon}.png" alt="Weather icon">`);
+                console.log(weatherNow.list[3].weather[0].icon);
+
+                y = -1;
+
+                const myJSON = JSON.stringify(weatherNow);
+
+                console.log("Weather JSON:" + myJSON);
+
+                header.setAttribute('class', 'header flex-horizontal');
+                main.setAttribute('class', 'mainbody');
+                loader.setAttribute('class', "hidden");
+                return;
+
+
+                //end of rendering
+            } else {
+                console.log(`Unable to display weather`);
+
+                $('#temp-now').text("Error to get weather");
+
+                y--;
+                showLongWeather();
+            }
+        })
+
+        .catch((error) => {
+            console.log(`Unable to display 5 day forecast`);
+
+            $('#temp-now').text("Sorry! Long forecast not available at this moment!");
+
+            y--;
+            showLongWeather();
+
+        });
+    console.log(weatherLink);
     console.log("WeatherNow end:" + weatherNow);
 
 }
+
 
 // Delay function
 function sleep(ms) {
@@ -251,7 +472,6 @@ function addedUnit() {
         unit = "metric";
         btnUnit.classList.add('btn-metric');
         btnUnit.classList.remove('btn-imperial');
-        /*btnUnit.setAttribute("class", "slider btn-metric");*/
         localStorage.setItem("unit", unit);
     } else {
         initUnit();
@@ -305,7 +525,7 @@ function showAutocomplete(countriesList) {
     }, "slow");
     // Load new values
     for (let i = 0; i < countriesList.length; i++) {
-        // Change the case of letters to 'Abc' mode
+        // Capitalize
         let country = countriesList[i].charAt(0).toUpperCase() + countriesList[i].toLowerCase().slice(1);
         $(matchList).append(`<div id="country_${i}">${country}</div>`);
         $("#country_" + i).on('click', () => {
@@ -319,7 +539,7 @@ function showCitiesList(country) {
     // Clean values
     $(matchList).html("");
     $(matchList).html("");
-    // Visual structure
+    // append match list
 
     $(matchList).html(`<div>${country}:</div><p id="search-btn" placeholder="Choose city"></p><ul class="cities-list" id="cities-list"></ul>`);
 
@@ -342,27 +562,13 @@ function showCitiesList(country) {
     console.log(words);
     countryNow = words.join(" ");
     console.log(`countryNow just before code: ${countryNow}`);
-
-    //capitalize above
     code = (codes[countryNow]);
     citiesList = [];
     citiesList = (countries[countryNow]);
     console.log(citiesList);
     console.log("Code is:" + code + "Country is: " + countryNow);
-    /*
-        for (let i = 0; i < countries[country].length; i++) {
-            let city = countries[country][i];
-            $("#cities-list").append(`<li id="cities_${i}">${city}</li>`);
-            //$("#my-input").val(country);
-            $("#cities_" + i).on('click', () => {
-                $('#search-btn').text(city);
-                console.log(city);
-            });
-        }*/
     searchCity.classList.remove('hidden');
 }
-
-
 
 function filterCityNames(inputc) {
 
@@ -388,19 +594,17 @@ function filterCityNames(inputc) {
         });
         console.log("matched cities: " + matched_cities);
         searchCity.setAttribute('class', "show");
-
-        ///
+        
         $("#cities-list").html("");
         $('#search-btn').text("Choose a city");
         for (let i = 0; i < matched_cities.length; i++) {
             let city = matched_cities[i];
             $("#cities-list").append(`<li id="cities_${i}">${city}</li>`);
-            //$("#my-input").val(country);
             $("#cities_" + i).on('click', () => {
                 $('#search-btn').text(city);
                 console.log(city);
-                ///// add function to fetch in here!!!!!!!
-                $('#city-now').text(city + ", " + countryNow + ", ");
+                // render now weather
+                $('#city-now').text(city + ", " + countryNow + ". ");
                 $('#state-now').text("");
                 $('#search-btn').text(city);
                 $("#cities-list").text("");
@@ -409,36 +613,25 @@ function filterCityNames(inputc) {
                 $(searchCity).text("");
                 x = -1;
                 cityAsked = (city);
-                //cityAsked = cityAsked.split(" ").join("&nbsp");
-
+                //cityAsked = cityAsked.split(" ").join("&nbsp");//might be necessary if API changes
                 console.log(`cityAsked: ${cityAsked}`);
-
-
-                //cityAsked = city;
-
 
                 header.setAttribute('class', 'opacityLoading header flex-horizontal');
                 main.setAttribute('class', 'opacityLoading mainbody');
                 loader.setAttribute('class', "show");
                 getLongitudeLatitude();
-                //showWeather();
+
             });
         }
-
-        //showAutocomplete(matched_items);
     }
 }
 
 
 function getLongitudeLatitude() {
 
-
     latLongLink = (`https://api.openweathermap.org/geo/1.0/direct?q=${cityAsked},${code}&limit=1&appid=4dd7b444d35c5781eda9fee4131ca26d`);
     console.log(`Testing latLongLink: ${latLongLink}`);
 
-
-    //weatherLink = (`https://api.openweathermap.org/data/2.5/forecast?q=${cityAsked}&mode=json&units=metric&appid=4dd7b444d35c5781eda9fee4131ca26d`);
-    //console.log("weatherLink here: " + weatherLink);
     console.log("z:" + z);
 
     if (z <= -7) {
@@ -457,7 +650,7 @@ function getLongitudeLatitude() {
         .then(response => response.json())
 
         .then((coordinates) => {
-            console.log(`coordinates: ${coordinates}`);
+
             //debugger;
             coordinatesNow = coordinates[0];
             if (coordinatesNow.country === code) {
@@ -468,11 +661,12 @@ function getLongitudeLatitude() {
                 const myJSON = JSON.stringify(coordinates);
 
                 console.log("Coordinates JSON:" + myJSON);
-                
+
                 z = -1;
                 header.setAttribute('class', 'header flex-horizontal');
                 main.setAttribute('class', 'mainbody');
                 loader.setAttribute('class', "hidden");
+                getTime();
                 showWeather();
                 return;
             } else {
@@ -495,6 +689,115 @@ function getLongitudeLatitude() {
 
 
 }
+
+// get time from choosen city
+var q = -1;
+var timeLink;
+function getTime() {
+    timeLink = (`http://api.geonames.org/timezoneJSON?lat=${latitudeAsked}&lng=${longitudeAsked}&username=cdennis27`);
+    console.log(`Testing timeLink: ${timeLink}`);
+
+    console.log("q:" + q);
+
+    if (q <= -7) {
+        alert(`Unable to find your city, please choose another city!`);
+        header.setAttribute('class', 'header flex-horizontal');
+        main.setAttribute('class', 'mainbody');
+        loader.setAttribute('class', "hidden");
+        q = -1;
+
+        return;
+    }
+
+    fetch(timeLink)
+
+
+        .then(response => response.json())
+
+        .then((timeHere) => {
+
+            debugger;
+
+            if (timeHere.countryCode === code) {
+
+                timeWhere = timeHere.time;
+                console.log(`Time in this city: ${timeWhere}`);
+
+                q = -1;
+                header.setAttribute('class', 'header flex-horizontal');
+                main.setAttribute('class', 'mainbody');
+                loader.setAttribute('class', "hidden");
+                convertTime();
+
+                $('#date').text(`${timeWhere}`);
+
+                timeWhere = timeWhere.split('');
+
+                console.log(`Time splitted: ${timeWhere}`);
+               
+                console.log(timeWhere);
+                const myJSON = JSON.stringify(timeWhere);
+                console.log("Time JSON:" + myJSON);
+                return;
+            } else {
+                console.log(`Unable to display this city time and date`);
+                $('#temp-now').text("Error to get time and date in this city!");
+                q--;
+                getTime();
+            }
+        })
+
+        .catch((error) => {
+            console.log(`Unable to display time in this city`);
+            $('#temp-now').text("Error to get coordinates!");
+            q--;
+            getTime();
+
+        });
+
+
+}
+
+const convertTime = () => {
+    
+    let time = timeWhere;
+    var year = time[0] + time[1] + time[2] + time[3];
+    var month = time[5] + time[6];
+    var day = time[8] + time[9];
+    var hour = time[11] + time[12];
+    var minute = time[14] + time[15];
+
+    if (month == 1) {
+        month = "Jan";
+    } else if (month == 2) {
+        month = "Feb";
+    } else if (month == 3) {
+        month = "Mar";
+    } else if (month == 4) {
+        month = "Apr";
+    } else if (month == 5) {
+        month = "May";
+    } else if (month == 6) {
+        month = "Jun";
+    } else if (month == 7) {
+        month = "Jul";
+    } else if (month == 8) {
+        month = "Aug";
+    } else if (month == 9) {
+        month = "Sep";
+    } else if (month == 10) {
+        month = "Oct";
+    } else if (month == 11) {
+        month = "Nov";
+    } else if (month == 12) {
+        month = "Dec";
+    };
+    console.log(month);
+    
+    time = (month + " " + day + ", " + year + " " + hour + ":" + minute);
+    timeWhere = time;
+    return;
+};
 
 
 
