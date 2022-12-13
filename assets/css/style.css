@@ -400,8 +400,32 @@ body {
     
 }
 
-.fiveDay {
-    grid-area: fiveDay;
+.five-day {
+    grid-area: five-day;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    align-items: center;
+    
+}
+
+.day-0, .day-1, .day-2, .day-3, .day-4 {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+    padding: 5px;
+    font-size: 0.6em;
+}
+
+#temp-6, #temp-14, #temp-22, #temp-30, #temp-38 {
+    font-size: 1.5em;
+    padding: 5px;
+}
+
+#icon-6 img, #icon-14 img, #icon-22 img, #icon-30 img, #icon-38 img {
+    width: 60px;
+    height: 60px;
+        
 }
 
 .opacityLoading {
@@ -409,7 +433,9 @@ body {
 }
 
 .footer {
-
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     background: linear-gradient(rgb(40, 35, 35, 0.25), 95%, var(--edgeBoxTransparent));
     border-color: transparent;
     border-radius: 40px;
@@ -420,6 +446,16 @@ body {
     height: 200px;
     margin-right: 20px;
     margin-left: 20px;
+}
+
+.footer a {
+    all: unset;
+    cursor: pointer;
+}
+
+.footer a:hover {
+    cursor: pointer;
+    color: rgb(151, 158, 228);
 }
 
 @media (max-width: 880px) {
@@ -529,3 +565,4 @@ body {
         right: auto;
     }
 }
+
