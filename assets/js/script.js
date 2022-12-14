@@ -30,6 +30,7 @@ var coordinatesNow = [];
 var y = -1;
 var timeWhere = [];
 var portionDay = [];
+var savedTowns = {"city" :"London", "code" :"GB"};//local storage
 
 // Functions on load:
 showInit();
@@ -422,7 +423,7 @@ function showLongWeather() {
                 portion = weatherNow.list[6].dt_txt.split('');
                 timeWhere = portion;
                 convertTime(timeWhere);
-                
+
                 $('#time-6').text(dateFiveDay);
 
 
@@ -464,7 +465,7 @@ function showLongWeather() {
                 portion = weatherNow.list[14].dt_txt.split('');
                 timeWhere = portion;
                 convertTime(timeWhere);
-                
+
                 $('#time-14').text(dateFiveDay);
 
 
@@ -507,7 +508,7 @@ function showLongWeather() {
                 portion = weatherNow.list[22].dt_txt.split('');
                 timeWhere = portion;
                 convertTime(timeWhere);
-                
+
                 $('#time-22').text(dateFiveDay);
 
 
@@ -551,7 +552,7 @@ function showLongWeather() {
                 portion = weatherNow.list[30].dt_txt.split('');
                 timeWhere = portion;
                 convertTime(timeWhere);
-                
+
                 $('#time-30').text(dateFiveDay);
 
 
@@ -595,7 +596,7 @@ function showLongWeather() {
                 portion = weatherNow.list[38].dt_txt.split('');
                 timeWhere = portion;
                 convertTime(timeWhere);
-                
+
                 $('#time-38').text(dateFiveDay);
 
 
@@ -814,6 +815,7 @@ function filterCityNames(inputc) {
         for (let i = 0; i < matched_cities.length; i++) {
             let city = matched_cities[i];
             $("#cities-list").append(`<li id="cities_${i}">${city}</li>`);
+            // set event listener when click in the city to change weather location displayed
             $("#cities_" + i).on('click', () => {
                 $('#search-btn').text(city);
                 console.log(city);
@@ -825,6 +827,10 @@ function filterCityNames(inputc) {
                 $("#match-list").text("");
                 $(search).text("");
                 $(searchCity).text("");
+                console.log(code);
+                debugger;
+                createHistory();
+                
                 x = -1;
                 cityAsked = (city);
                 //cityAsked = cityAsked.split(" ").join("&nbsp");//might be necessary if API changes
@@ -834,7 +840,7 @@ function filterCityNames(inputc) {
                 main.setAttribute('class', 'opacityLoading mainbody');
                 loader.setAttribute('class', "show");
                 getLongitudeLatitude();
-
+                
             });
         }
     }
@@ -908,7 +914,10 @@ function getLongitudeLatitude() {
 var q = -1;
 var timeLink;
 function getTime() {
-    timeLink = (`http://api.geonames.org/timezoneJSON?lat=${latitudeAsked}&lng=${longitudeAsked}&username=cdennis27`);
+    //timeLink = (`http://api.geonames.org/timezoneJSON?lat=${latitudeAsked}&lng=${longitudeAsked}&username=cdennis27`);
+    //console.log(`Testing timeLink: ${timeLink}`);
+
+    timeLink = (`https://api.timezonedb.com/v2.1/get-time-zone?key=2562DLSB4X6P&format=json&by=position&lat=${latitudeAsked}&lng=${longitudeAsked}`);
     console.log(`Testing timeLink: ${timeLink}`);
 
     console.log("q:" + q);
@@ -930,11 +939,11 @@ function getTime() {
 
         .then((timeHere) => {
 
-            debugger;
+            //debugger;
 
             if (timeHere.countryCode === code) {
 
-                timeWhere = timeHere.time;
+                timeWhere = timeHere.formatted;
                 console.log(`Time in this city: ${timeWhere}`);
 
                 q = -1;
@@ -1015,10 +1024,51 @@ const convertTime = () => {
 };
 
 function createHistory() {
+    
+    if (savedTowns.length < 20) {
+        let i = (savedTowns.length + 1);
+        savedTowns[i] = {city:[city], code:[code]};
+console.log(savedTowns);
+
+};
 
 
+};
 
+function renderHistory() {
+    if (savedTowns.length > 0) {
+        for (let i = 0; i < savedTowns.length; i++) {
 
+            let city = savedTowns.city[i];
+
+            $(".historic-buttons").append(`<li id="short_${i}">${city}</li>`);
+
+            $("#short_" + i).on('click', () => {
+                $('#search-btn').text(city);
+                console.log(city);
+                code = savedTowns.code[i];
+
+                // render now weather
+                $('#city-now').text(city + ", " + countryNow + ". ");
+                $('#state-now').text("");
+                $('#search-btn').text(city);
+                $("#cities-list").text("");
+                $("#match-list").text("");
+                $(search).text("");
+                $(searchCity).text("");
+                x = -1;
+                cityAsked = (city);
+                //cityAsked = cityAsked.split(" ").join("&nbsp");//might be necessary if API changes
+                console.log(`cityAsked: ${cityAsked}`);
+        
+                header.setAttribute('class', 'opacityLoading header flex-horizontal');
+                main.setAttribute('class', 'opacityLoading mainbody');
+                loader.setAttribute('class', "show");
+                getLongitudeLatitude();
+                
+            });
+        }
+    }
 };
 
 function clearHistory() {
