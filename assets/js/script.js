@@ -29,6 +29,8 @@ var z = -1;
 var coordinatesNow = [];
 var y = -1;
 var timeWhere = [];
+var portionDay = [];
+var savedTowns = {"city" :"London", "code" :"GB"};//local storage
 
 // Functions on load:
 showInit();
@@ -283,11 +285,11 @@ function showLongWeather() {
                 };
 
                 if (unit == "metric") {
-                    $('#precipitation-0').text("Precipitation: " + weatherNow.list[0].pop.toFixed(2)
+                    $('#precipitation-0').html("Precipitation:<br>" + weatherNow.list[0].pop.toFixed(2)
                         + " mm");
                 }
                 else if (unit == "imperial") {
-                    $('#precipitation-0').text("Precipitation: " + (weatherNow.list[0].pop.toFixed(0) * 0.0393701).toFixed(2)
+                    $('#precipitation-0').html("Precipitation:<br>" + (weatherNow.list[0].pop.toFixed(0) * 0.0393701).toFixed(2)
                         + " inches");
                 };
 
@@ -323,11 +325,11 @@ function showLongWeather() {
                 };
 
                 if (unit == "metric") {
-                    $('#precipitation-1').text("Precipitation: " + weatherNow.list[1].pop.toFixed(2)
+                    $('#precipitation-1').html("Precipitation:<br>" + weatherNow.list[1].pop.toFixed(2)
                         + " mm");
                 }
                 else if (unit == "imperial") {
-                    $('#precipitation-1').text("Precipitation: " + (weatherNow.list[1].pop.toFixed(0) * 0.0393701).toFixed(2)
+                    $('#precipitation-1').html("Precipitation:<br>" + (weatherNow.list[1].pop.toFixed(0) * 0.0393701).toFixed(2)
                         + " inches");
                 };
 
@@ -365,11 +367,11 @@ function showLongWeather() {
                 };
 
                 if (unit == "metric") {
-                    $('#precipitation-2').text("Precipitation: " + weatherNow.list[2].pop.toFixed(2)
+                    $('#precipitation-2').html("Precipitation:<br>" + weatherNow.list[2].pop.toFixed(2)
                         + " mm");
                 }
                 else if (unit == "imperial") {
-                    $('#precipitation-2').text("Precipitation: " + (weatherNow.list[2].pop.toFixed(0) * 0.0393701).toFixed(2)
+                    $('#precipitation-2').html("Precipitation:<br>" + (weatherNow.list[2].pop.toFixed(0) * 0.0393701).toFixed(2)
                         + " inches");
                 };
 
@@ -406,22 +408,235 @@ function showLongWeather() {
                 };
 
                 if (unit == "metric") {
-                    $('#precipitation-3').text("Precipitation: " + weatherNow.list[3].pop.toFixed(2)
+                    $('#precipitation-3').html("Precipitation:<br>" + weatherNow.list[3].pop.toFixed(2)
                         + " mm");
                 }
                 else if (unit == "imperial") {
-                    $('#precipitation-3').text("Precipitation: " + (weatherNow.list[3].pop.toFixed(0) * 0.0393701).toFixed(2)
+                    $('#precipitation-3').html("Precipitation:<br>" + (weatherNow.list[3].pop.toFixed(0) * 0.0393701).toFixed(2)
                         + " inches");
                 };
 
                 $('#icon-3').html(`<img src="assets/icons/${weatherNow.list[3].weather[0].icon}.png" alt="Weather icon">`);
                 console.log(weatherNow.list[3].weather[0].icon);
+                // Day 0 starts
 
+                portion = weatherNow.list[6].dt_txt.split('');
+                timeWhere = portion;
+                convertTime(timeWhere);
+
+                $('#time-6').text(dateFiveDay);
+
+
+                if (unit == "metric") {
+                    $('#temp-6').text(weatherNow.list[6].main.temp.toFixed(0)
+                        + "°C");
+                }
+                else if (unit == "imperial") {
+                    $('#temp-6').text(weatherNow.list[6].main.temp.toFixed(0)
+                        + "°F");
+                };
+
+                if (unit == "metric") {
+                    $('#precipitation-6').html("Precipitation:<br>" + weatherNow.list[6].pop.toFixed(2)
+                        + " mm");
+                }
+                else if (unit == "imperial") {
+                    $('#precipitation-6').html("Precipitation:<br>" + (weatherNow.list[6].pop.toFixed(0) * 0.0393701).toFixed(2)
+                        + " inches");
+                };
+
+                $('#icon-6').html(`<img src="assets/icons/${weatherNow.list[6].weather[0].icon}.png" alt="Weather icon">`);
+
+
+                if (unit == "metric") {
+                    $('#wind-6').text("Wind: " + (weatherNow.list[6].wind.speed.toFixed(4) * 3.6).toFixed(2)
+                        + " KM/H");
+                }
+                else if (unit == "imperial") {
+                    $('#wind-6').text("Wind: " + weatherNow.list[6].wind.speed.toFixed(2)
+                        + " MP/H");
+                };
+
+                $('#humidity-6').text("Humidity: " + weatherNow.list[6].main.humidity.toFixed(0)
+                    + "%");
+                console.log(weatherNow.list[6]);
+                // Day 1 starts
+
+                portion = weatherNow.list[14].dt_txt.split('');
+                timeWhere = portion;
+                convertTime(timeWhere);
+
+                $('#time-14').text(dateFiveDay);
+
+
+                if (unit == "metric") {
+                    $('#temp-14').text(weatherNow.list[14].main.temp.toFixed(0)
+                        + "°C");
+                }
+                else if (unit == "imperial") {
+                    $('#temp-14').text(weatherNow.list[14].main.temp.toFixed(0)
+                        + "°F");
+                };
+
+                if (unit == "metric") {
+                    $('#precipitation-14').html("Precipitation:<br>" + weatherNow.list[14].pop.toFixed(2)
+                        + " mm");
+                }
+                else if (unit == "imperial") {
+                    $('#precipitation-14').html("Precipitation:<br>" + (weatherNow.list[14].pop.toFixed(0) * 0.0393701).toFixed(2)
+                        + " inches");
+                };
+
+                $('#icon-14').html(`<img src="assets/icons/${weatherNow.list[14].weather[0].icon}.png" alt="Weather icon">`);
+
+
+                if (unit == "metric") {
+                    $('#wind-14').text("Wind: " + (weatherNow.list[14].wind.speed.toFixed(4) * 3.6).toFixed(2)
+                        + " KM/H");
+                }
+                else if (unit == "imperial") {
+                    $('#wind-14').text("Wind: " + weatherNow.list[14].wind.speed.toFixed(2)
+                        + " MP/H");
+                };
+
+                $('#humidity-14').text("Humidity: " + weatherNow.list[14].main.humidity.toFixed(0)
+                    + "%");
+                console.log(weatherNow.list[14]);
+
+                // Day 2 starts
+
+                portion = weatherNow.list[22].dt_txt.split('');
+                timeWhere = portion;
+                convertTime(timeWhere);
+
+                $('#time-22').text(dateFiveDay);
+
+
+                if (unit == "metric") {
+                    $('#temp-22').text(weatherNow.list[22].main.temp.toFixed(0)
+                        + "°C");
+                }
+                else if (unit == "imperial") {
+                    $('#temp-22').text(weatherNow.list[22].main.temp.toFixed(0)
+                        + "°F");
+                };
+
+                if (unit == "metric") {
+                    $('#precipitation-22').html("Precipitation:<br>" + weatherNow.list[22].pop.toFixed(2)
+                        + " mm");
+                }
+                else if (unit == "imperial") {
+                    $('#precipitation-22').html("Precipitation:<br>" + (weatherNow.list[22].pop.toFixed(0) * 0.0393701).toFixed(2)
+                        + " inches");
+                };
+
+                $('#icon-22').html(`<img src="assets/icons/${weatherNow.list[22].weather[0].icon}.png" alt="Weather icon">`);
+
+
+                if (unit == "metric") {
+                    $('#wind-22').text("Wind: " + (weatherNow.list[22].wind.speed.toFixed(4) * 3.6).toFixed(2)
+                        + " KM/H");
+                }
+                else if (unit == "imperial") {
+                    $('#wind-22').text("Wind: " + weatherNow.list[22].wind.speed.toFixed(2)
+                        + " MP/H");
+                };
+
+                $('#humidity-22').text("Humidity: " + weatherNow.list[22].main.humidity.toFixed(0)
+                    + "%");
+                console.log(weatherNow.list[22]);
+
+
+                // Day 3 starts
+
+                portion = weatherNow.list[30].dt_txt.split('');
+                timeWhere = portion;
+                convertTime(timeWhere);
+
+                $('#time-30').text(dateFiveDay);
+
+
+                if (unit == "metric") {
+                    $('#temp-30').text(weatherNow.list[30].main.temp.toFixed(0)
+                        + "°C");
+                }
+                else if (unit == "imperial") {
+                    $('#temp-30').text(weatherNow.list[30].main.temp.toFixed(0)
+                        + "°F");
+                };
+
+                if (unit == "metric") {
+                    $('#precipitation-30').html("Precipitation:<br>" + weatherNow.list[30].pop.toFixed(2)
+                        + " mm");
+                }
+                else if (unit == "imperial") {
+                    $('#precipitation-30').html("Precipitation:<br>" + (weatherNow.list[30].pop.toFixed(0) * 0.0393701).toFixed(2)
+                        + " inches");
+                };
+
+                $('#icon-30').html(`<img src="assets/icons/${weatherNow.list[30].weather[0].icon}.png" alt="Weather icon">`);
+
+
+                if (unit == "metric") {
+                    $('#wind-30').text("Wind: " + (weatherNow.list[30].wind.speed.toFixed(4) * 3.6).toFixed(2)
+                        + " KM/H");
+                }
+                else if (unit == "imperial") {
+                    $('#wind-30').text("Wind: " + weatherNow.list[30].wind.speed.toFixed(2)
+                        + " MP/H");
+                };
+
+                $('#humidity-30').text("Humidity: " + weatherNow.list[30].main.humidity.toFixed(0)
+                    + "%");
+                console.log(weatherNow.list[30]);
+
+
+                // Day 4 starts
+
+                portion = weatherNow.list[38].dt_txt.split('');
+                timeWhere = portion;
+                convertTime(timeWhere);
+
+                $('#time-38').text(dateFiveDay);
+
+
+                if (unit == "metric") {
+                    $('#temp-38').text(weatherNow.list[38].main.temp.toFixed(0)
+                        + "°C");
+                }
+                else if (unit == "imperial") {
+                    $('#temp-38').text(weatherNow.list[38].main.temp.toFixed(0)
+                        + "°F");
+                };
+
+                if (unit == "metric") {
+                    $('#precipitation-38').html("Precipitation:<br>" + weatherNow.list[38].pop.toFixed(2)
+                        + " mm");
+                }
+                else if (unit == "imperial") {
+                    $('#precipitation-38').html("Precipitation:<br>" + (weatherNow.list[38].pop.toFixed(0) * 0.0393701).toFixed(2)
+                        + " inches");
+                };
+
+                $('#icon-38').html(`<img src="assets/icons/${weatherNow.list[38].weather[0].icon}.png" alt="Weather icon">`);
+
+
+                if (unit == "metric") {
+                    $('#wind-38').text("Wind: " + (weatherNow.list[38].wind.speed.toFixed(4) * 3.6).toFixed(2)
+                        + " KM/H");
+                }
+                else if (unit == "imperial") {
+                    $('#wind-38').text("Wind: " + weatherNow.list[38].wind.speed.toFixed(2)
+                        + " MP/H");
+                };
+
+                $('#humidity-38').text("Humidity: " + weatherNow.list[38].main.humidity.toFixed(0)
+                    + "%");
+                console.log(weatherNow.list[38]);
+
+                //
                 y = -1;
 
-                const myJSON = JSON.stringify(weatherNow);
-
-                console.log("Weather JSON:" + myJSON);
 
                 header.setAttribute('class', 'header flex-horizontal');
                 main.setAttribute('class', 'mainbody');
@@ -594,12 +809,13 @@ function filterCityNames(inputc) {
         });
         console.log("matched cities: " + matched_cities);
         searchCity.setAttribute('class', "show");
-        
+
         $("#cities-list").html("");
         $('#search-btn').text("Choose a city");
         for (let i = 0; i < matched_cities.length; i++) {
             let city = matched_cities[i];
             $("#cities-list").append(`<li id="cities_${i}">${city}</li>`);
+            // set event listener when click in the city to change weather location displayed
             $("#cities_" + i).on('click', () => {
                 $('#search-btn').text(city);
                 console.log(city);
@@ -611,6 +827,10 @@ function filterCityNames(inputc) {
                 $("#match-list").text("");
                 $(search).text("");
                 $(searchCity).text("");
+                console.log(code);
+                debugger;
+                createHistory();
+                
                 x = -1;
                 cityAsked = (city);
                 //cityAsked = cityAsked.split(" ").join("&nbsp");//might be necessary if API changes
@@ -620,7 +840,7 @@ function filterCityNames(inputc) {
                 main.setAttribute('class', 'opacityLoading mainbody');
                 loader.setAttribute('class', "show");
                 getLongitudeLatitude();
-
+                
             });
         }
     }
@@ -694,7 +914,10 @@ function getLongitudeLatitude() {
 var q = -1;
 var timeLink;
 function getTime() {
-    timeLink = (`http://api.geonames.org/timezoneJSON?lat=${latitudeAsked}&lng=${longitudeAsked}&username=cdennis27`);
+    //timeLink = (`http://api.geonames.org/timezoneJSON?lat=${latitudeAsked}&lng=${longitudeAsked}&username=cdennis27`);
+    //console.log(`Testing timeLink: ${timeLink}`);
+
+    timeLink = (`https://api.timezonedb.com/v2.1/get-time-zone?key=2562DLSB4X6P&format=json&by=position&lat=${latitudeAsked}&lng=${longitudeAsked}`);
     console.log(`Testing timeLink: ${timeLink}`);
 
     console.log("q:" + q);
@@ -716,11 +939,11 @@ function getTime() {
 
         .then((timeHere) => {
 
-            debugger;
+            //debugger;
 
             if (timeHere.countryCode === code) {
 
-                timeWhere = timeHere.time;
+                timeWhere = timeHere.formatted;
                 console.log(`Time in this city: ${timeWhere}`);
 
                 q = -1;
@@ -734,7 +957,7 @@ function getTime() {
                 timeWhere = timeWhere.split('');
 
                 console.log(`Time splitted: ${timeWhere}`);
-               
+
                 console.log(timeWhere);
                 const myJSON = JSON.stringify(timeWhere);
                 console.log("Time JSON:" + myJSON);
@@ -755,12 +978,12 @@ function getTime() {
 
         });
 
-
 }
-
+var dateFiveDay;
 const convertTime = () => {
-    
+
     let time = timeWhere;
+
     var year = time[0] + time[1] + time[2] + time[3];
     var month = time[5] + time[6];
     var day = time[8] + time[9];
@@ -793,15 +1016,64 @@ const convertTime = () => {
         month = "Dec";
     };
     console.log(month);
-    
+
     time = (month + " " + day + ", " + year + " " + hour + ":" + minute);
+    dateFiveDay = (month + " " + day + ", " + year);
     timeWhere = time;
     return;
 };
 
+function createHistory() {
+    
+    if (savedTowns.length < 20) {
+        let i = (savedTowns.length + 1);
+        savedTowns[i] = {city:[city], code:[code]};
+console.log(savedTowns);
+
+};
 
 
+};
 
+function renderHistory() {
+    if (savedTowns.length > 0) {
+        for (let i = 0; i < savedTowns.length; i++) {
+
+            let city = savedTowns.city[i];
+
+            $(".historic-buttons").append(`<li id="short_${i}">${city}</li>`);
+
+            $("#short_" + i).on('click', () => {
+                $('#search-btn').text(city);
+                console.log(city);
+                code = savedTowns.code[i];
+
+                // render now weather
+                $('#city-now').text(city + ", " + countryNow + ". ");
+                $('#state-now').text("");
+                $('#search-btn').text(city);
+                $("#cities-list").text("");
+                $("#match-list").text("");
+                $(search).text("");
+                $(searchCity).text("");
+                x = -1;
+                cityAsked = (city);
+                //cityAsked = cityAsked.split(" ").join("&nbsp");//might be necessary if API changes
+                console.log(`cityAsked: ${cityAsked}`);
+        
+                header.setAttribute('class', 'opacityLoading header flex-horizontal');
+                main.setAttribute('class', 'opacityLoading mainbody');
+                loader.setAttribute('class', "show");
+                getLongitudeLatitude();
+                
+            });
+        }
+    }
+};
+
+function clearHistory() {
+
+};
 
 
 
