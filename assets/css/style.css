@@ -72,7 +72,7 @@
 }
 
 body {
-    min-width: 330px;
+    min-width: 360px;
     max-width: 5000px;
     background: linear-gradient(var(--topBg), 60%, var(--bottomBg));
     height: 100%;
@@ -90,7 +90,7 @@ body {
     border-style: solid;
     border-width: 1px;
     color: white;
-    min-width: 500px;
+    min-width: 530px;
 }
 
 .logo {
@@ -190,7 +190,6 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-
 }
 
 #search-cities {
@@ -294,6 +293,7 @@ body {
     cursor: pointer;
     color: white;
     border-radius: 10px;
+    min-width: 200px
 }
 
 .historic-buttons li:hover {
@@ -351,27 +351,28 @@ body {
 
 #temp-now {
     grid-area: nows1;
-
+    padding-top: 10px;
+    font-size: 1.2em;
 }
 
 #wind-now {
     grid-area: nows2;
-
+    font-size: 0.8em;
 }
 
 #humidity-now {
     grid-area: nows3;
-
+    font-size: 0.8em;
 }
 
 #visibility-now {
     grid-area: nows4;
-
+    font-size: 0.8em;
 }
 
 #precipitation-now {
     grid-area: nows5;
-
+    font-size: 0.8em;
 }
 
 .today {
@@ -501,7 +502,7 @@ body {
     height: 200px;
     margin-right: 20px;
     margin-left: 20px;
-    min-width: 500px;
+    min-width: 485px;
 }
 
 .footer a {
@@ -661,7 +662,7 @@ body {
     .search-container {
         max-width: 350px;
     }
-    
+
 }
 
 @media (max-width: 515px) {
@@ -669,7 +670,7 @@ body {
     .flex-horizontal {
         font-size: 0.6rem;
         max-width: 600px;
-        
+
     }
 
     .btn-unit {
