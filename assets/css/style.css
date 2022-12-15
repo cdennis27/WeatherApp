@@ -266,7 +266,6 @@ body {
 
 #match-list div {
     min-height: auto;
-
 }
 
 #match-list div:hover {
@@ -318,8 +317,6 @@ body {
 #iconNow img {
     width: 200px;
     height: 200px;
-
-
 }
 
 .now {
@@ -335,14 +332,11 @@ body {
         "nows5 img";
     grid-gap: 0px;
     grid-template-columns: 7fr 3fr;
-
-
 }
 
 #city {
     grid-area: city;
     font-size: 1.05em;
-
 }
 
 #iconNow {
@@ -440,8 +434,6 @@ body {
 #icon-3 img {
     width: 100px;
     height: 100px;
-
-
 }
 
 .five-day {
@@ -449,7 +441,6 @@ body {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
     align-items: center;
-
 }
 
 .day-0,
@@ -481,7 +472,6 @@ body {
 #icon-38 img {
     width: 60px;
     height: 60px;
-
 }
 
 .opacityLoading {
@@ -557,8 +547,6 @@ body {
         margin-left: auto;
     }
 
-
-
     .day-0,
     .day-1,
     .day-2,
@@ -581,8 +569,6 @@ body {
     .five-day {
         font-size: 0.9em;
     }
-
-
 }
 
 @media (min-width: 580px) {
@@ -595,8 +581,6 @@ body {
         background-color: rgb(151, 158, 228);
         box-shadow: inset 0 0px 5px 3px rgb(201, 198, 232);
     }
-
-
 }
 
 @media (max-width: 580px) {
@@ -670,7 +654,6 @@ body {
     .flex-horizontal {
         font-size: 0.6rem;
         max-width: 600px;
-
     }
 
     .btn-unit {
@@ -691,7 +674,6 @@ body {
         width: 330px;
         height: 80px;
         flex-direction: column;
-
     }
 
     .btn-unit {

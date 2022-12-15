@@ -31,6 +31,10 @@ var timeWhere = [];
 var portionDay = [];
 var savedTowns = localStorage.getItem("savedTowns");
 var hourIcon;
+var dateFiveDay;
+var repeatCity;
+var repeatCode;
+
 // Functions on load:
 showInit();
 
@@ -51,15 +55,14 @@ $(searchCity).on('input', function (element) {
 });
 
 $(document).ready(function () {
-    console.log($(countries));
-    console.log(codes);
+
     collectCountries();
     $(search).on('input', function (element) {
         filterCountriesNames(element.target.value);
     });
 });
 
-// First Information fetch
+// First LUser Local Information fetch
 
 async function showInit() {
 
@@ -70,9 +73,9 @@ async function showInit() {
 }
 
 function showLoader() {
-    header.setAttribute('class', 'header flex-horizontal');
-    main.setAttribute('class', 'mainbody');
-    loader.setAttribute('class', "hidden");
+    header.setAttribute('class', 'header flex-horizontal hidden');
+    main.setAttribute('class', 'mainbody hidden');
+    loader.setAttribute('class', "show");
 };
 
 function hideLoader() {
@@ -88,15 +91,8 @@ function showCity() {
         .then(response => response.json())
         .then((locationNow) => {
 
-            console.log(locationNow);
-            console.log('City is: ' + locationNow.city);
-
-
-
-
             if (locationNow != undefined) {
 
-                console.log('This is your city: ' + locationNow.city);
                 $('#city-now').text(locationNow.city + ", ");
                 $('#state-now').text(locationNow.state + ", ");
 
@@ -104,20 +100,17 @@ function showCity() {
                 cityAsked = cityAsked.split(" ").join("&nbsp");
                 longitudeAsked = (locationNow.longitude);
                 latitudeAsked = (locationNow.latitude);
-                console.log(`Longitude is: ${longitudeAsked} Latitude is: ${latitudeAsked}`);
                 return;
             }
             else if (locationNow.city == undefined) {
                 $('#city-now').text("Toronto, ");
                 $('#state-now').text("Ontario, ");
-                console.log("Didn't find your city" + locationNow.city);
             }
 
 
         })
         .catch((error) => {
 
-            console.log("Didn't find your city");
             $('#city-now').text("Toronto, ");
             $('#state-now').text("Ontario, ");
             return;
@@ -129,17 +122,15 @@ function showCity() {
 
 function showWeather() {
     weatherLink = (`https://api.openweathermap.org/data/2.5/weather?lat=${latitudeAsked}&lon=${longitudeAsked}&appid=4dd7b444d35c5781eda9fee4131ca26d&units=${unit}`);
-    console.log(`Testing weatherLink: ${weatherLink}`);
-    
+
     //weatherLink = (`https://api.openweathermap.org/data/2.5/forecast?q=${cityAsked}&mode=json&units=metric&appid=4dd7b444d35c5781eda9fee4131ca26d`);
-    //console.log("weatherLink here: " + weatherLink);
-    console.log("x:" + x);
 
     if (x <= -7) {
         alert(`Unable to find your city, please choose your city!`);
         header.setAttribute('class', 'header flex-horizontal');
         main.setAttribute('class', 'mainbody');
         loader.setAttribute('class', "hidden");
+        showLongWeather();
         return;
     }
 
@@ -148,10 +139,8 @@ function showWeather() {
         .then(response => response.json())
 
         .then((weatherNow) => {
-            console.log(weatherNow.cod);
-            //debugger;
+
             if (weatherNow.cod === 200) {
-                console.log(weatherNow);
                 // Now
                 if (unit == "metric") {
                     $('#temp-now').text(weatherNow.main.temp.toFixed(0)
@@ -184,14 +173,23 @@ function showWeather() {
 
                 if (unit == "metric") {
                     $('#precipitation-now').text("Condition: " + weatherNow.weather[0].description
-                        + "");//mm
+                        + "");
+                    if (weatherNow.weather[0].main == "Rain") {
+                        $('#precipitation-now').html("Condition: " + weatherNow.weather[0].description + " <br> Rain: " + weatherNow.rain["1h"].toFixed(2) + "mm");
+                    } else if (weatherNow.weather[0].main == "Snow") {
+                        $('#precipitation-now').html("Condition: " + weatherNow.weather[0].description + " <br> Snow: " + weatherNow.snow["1h"].toFixed(2) + "mm");
+                    }
                 }
                 else if (unit == "imperial") {
                     $('#precipitation-now').text("Condition: " + weatherNow.weather[0].description //(weatherNow.pop.toFixed(0) * 0.0393701).toFixed(2)
-                        + "");//inches
+                        + "");
+                    if (weatherNow.weather[0].main == "Rain") {
+                        $('#precipitation-now').html("Condition: " + weatherNow.weather[0].description + " <br> Rain: " + (weatherNow.rain["1h"] * 0.0393701).toFixed(2) + "inches");
+                    } else if (weatherNow.weather[0].main == "Snow") {
+                        $('#precipitation-now').html("Condition: " + weatherNow.weather[0].description + " <br> Snow: " + (weatherNow.snow["1h"] * 0.0393701).toFixed(2) + "inches");
+                    }
                 };
-                
-                console.log(`icon time: ${hourIcon}`);
+
                 if (hourIcon != undefined || hourIcon != null) {
                     let dayNight = "d";
                     if (hourIcon >= 6 && hourIcon < 18) {
@@ -204,50 +202,33 @@ function showWeather() {
                     $('#iconNow').html(`<img src="assets/icons/${weatherNow.weather[0].icon}.png" alt="Weather icon">`);
                 };
 
-
-
-                console.log(weatherNow.weather[0].icon);
-
-
-                const myJSON = JSON.stringify(weatherNow);
-
-                console.log("Weather JSON:" + myJSON);
+                showLongWeather();
                 //hideLoader();
                 header.setAttribute('class', 'header flex-horizontal');
                 main.setAttribute('class', 'mainbody');
                 loader.setAttribute('class', "hidden");
                 return;
             } else {
-                console.log(`Unable to display weather`);
 
                 $('#temp-now').text("Error to get weather");
-
                 x--;
                 showWeather();
             }
         })
 
         .catch((error) => {
-            console.log(`Unable to display weather`);
-            console.log("Didn't find your weather");
-            $('#temp-now').text("Select a city!");
 
+            $('#temp-now').text("Select a city!");
             x--;
-            showInit();
+            showWeather();
 
         });
-    console.log(weatherLink);
-
-    showLongWeather();
 
 }
 // Fetch 5 day forecast
 
 function showLongWeather() {
     weatherLink = (`https://api.openweathermap.org/data/2.5/forecast?lat=${latitudeAsked}&lon=${longitudeAsked}&appid=4dd7b444d35c5781eda9fee4131ca26d&units=${unit}`);
-    console.log(`Testing weatherLink: ${weatherLink}`);
-
-    console.log("y:" + y);
 
     if (y <= -7) {
         //alert(`Unable to find your city, please choose your city!`);
@@ -262,10 +243,9 @@ function showLongWeather() {
         .then(response => response.json())
 
         .then((weatherNow) => {
-            console.log(weatherNow.cod);
-            //debugger;
+
             if (weatherNow.cod === "200") {
-                console.log(weatherNow);
+
                 //time-0
                 let dayNight = "";
                 let portion = weatherNow.list[0].dt_txt.split('');
@@ -302,15 +282,8 @@ function showLongWeather() {
                         + "°F");
                 };
 
-                if (unit == "metric") {
-                    $('#precipitation-0').html("Precipitation:<br>" + weatherNow.list[0].pop.toFixed(2)
-                        + " mm");
-                }
-                else if (unit == "imperial") {
-                    $('#precipitation-0').html("Precipitation:<br>" + (weatherNow.list[0].pop.toFixed(0) * 0.0393701).toFixed(2)
-                        + " inches");
-                };
-
+                $('#precipitation-0').html("Precipitation:<br>" + (weatherNow.list[0].pop * 100).toFixed(0)
+                    + "%");
 
 
                 $('#icon-0').html(`<img src="assets/icons/${weatherNow.list[0].weather[0].icon[0]}${weatherNow.list[0].weather[0].icon[1]}${dayNight}.png" alt="Weather icon">`);
@@ -349,14 +322,10 @@ function showLongWeather() {
                         + "°F");
                 };
 
-                if (unit == "metric") {
-                    $('#precipitation-1').html("Precipitation:<br>" + weatherNow.list[1].pop.toFixed(2)
-                        + " mm");
-                }
-                else if (unit == "imperial") {
-                    $('#precipitation-1').html("Precipitation:<br>" + (weatherNow.list[1].pop.toFixed(0) * 0.0393701).toFixed(2)
-                        + " inches");
-                };
+
+                $('#precipitation-1').html("Precipitation:<br>" + (weatherNow.list[1].pop * 100).toFixed(0)
+                    + "%");
+
 
 
                 $('#icon-1').html(`<img src="assets/icons/${weatherNow.list[1].weather[0].icon[0]}${weatherNow.list[1].weather[0].icon[1]}${dayNight}.png" alt="Weather icon">`);
@@ -396,17 +365,10 @@ function showLongWeather() {
                         + "°F");
                 };
 
-                if (unit == "metric") {
-                    $('#precipitation-2').html("Precipitation:<br>" + weatherNow.list[2].pop.toFixed(2)
-                        + " mm");
-                }
-                else if (unit == "imperial") {
-                    $('#precipitation-2').html("Precipitation:<br>" + (weatherNow.list[2].pop.toFixed(0) * 0.0393701).toFixed(2)
-                        + " inches");
-                };
+                $('#precipitation-2').html("Precipitation:<br>" + (weatherNow.list[2].pop * 100).toFixed(0)
+                    + "%");
 
                 $('#icon-2').html(`<img src="assets/icons/${weatherNow.list[2].weather[0].icon[0]}${weatherNow.list[2].weather[0].icon[1]}${dayNight}.png" alt="Weather icon">`);
-                console.log(weatherNow.list[2].weather[0].icon);
 
                 //time-3
                 portion = weatherNow.list[3].dt_txt.split('');
@@ -442,17 +404,11 @@ function showLongWeather() {
                         + "°F");
                 };
 
-                if (unit == "metric") {
-                    $('#precipitation-3').html("Precipitation:<br>" + weatherNow.list[3].pop.toFixed(2)
-                        + " mm");
-                }
-                else if (unit == "imperial") {
-                    $('#precipitation-3').html("Precipitation:<br>" + (weatherNow.list[3].pop.toFixed(0) * 0.0393701).toFixed(2)
-                        + " inches");
-                };
+                $('#precipitation-3').html("Precipitation:<br>" + (weatherNow.list[3].pop * 100).toFixed(0)
+                    + "%");
 
                 $('#icon-3').html(`<img src="assets/icons/${weatherNow.list[3].weather[0].icon[0]}${weatherNow.list[3].weather[0].icon[1]}${dayNight}.png" alt="Weather icon">`);
-                console.log(weatherNow.list[3].weather[0].icon);
+
                 // Day 0 starts
 
                 portion = weatherNow.list[6].dt_txt.split('');
@@ -471,14 +427,10 @@ function showLongWeather() {
                         + "°F");
                 };
 
-                if (unit == "metric") {
-                    $('#precipitation-6').html("Precipitation:<br>" + weatherNow.list[6].pop.toFixed(2)
-                        + " mm");
-                }
-                else if (unit == "imperial") {
-                    $('#precipitation-6').html("Precipitation:<br>" + (weatherNow.list[6].pop.toFixed(0) * 0.0393701).toFixed(2)
-                        + " inches");
-                };
+
+                $('#precipitation-6').html("Precipitation:<br>" + (weatherNow.list[6].pop * 100).toFixed(0)
+                    + "%");
+
                 dayNight = "d";
                 $('#icon-6').html(`<img src="assets/icons/${weatherNow.list[6].weather[0].icon[0]}${weatherNow.list[6].weather[0].icon[1]}${dayNight}.png" alt="Weather icon">`);
 
@@ -494,7 +446,7 @@ function showLongWeather() {
 
                 $('#humidity-6').text("Humidity: " + weatherNow.list[6].main.humidity.toFixed(0)
                     + "%");
-                console.log(weatherNow.list[6]);
+
                 // Day 1 starts
 
                 portion = weatherNow.list[14].dt_txt.split('');
@@ -513,14 +465,10 @@ function showLongWeather() {
                         + "°F");
                 };
 
-                if (unit == "metric") {
-                    $('#precipitation-14').html("Precipitation:<br>" + weatherNow.list[14].pop.toFixed(2)
-                        + " mm");
-                }
-                else if (unit == "imperial") {
-                    $('#precipitation-14').html("Precipitation:<br>" + (weatherNow.list[14].pop.toFixed(0) * 0.0393701).toFixed(2)
-                        + " inches");
-                };
+
+                $('#precipitation-14').html("Precipitation:<br>" + (weatherNow.list[14].pop * 100).toFixed(0)
+                    + "%");
+
 
                 $('#icon-14').html(`<img src="assets/icons/${weatherNow.list[14].weather[0].icon[0]}${weatherNow.list[14].weather[0].icon[1]}${dayNight}.png" alt="Weather icon">`);
 
@@ -536,7 +484,6 @@ function showLongWeather() {
 
                 $('#humidity-14').text("Humidity: " + weatherNow.list[14].main.humidity.toFixed(0)
                     + "%");
-                console.log(weatherNow.list[14]);
 
                 // Day 2 starts
 
@@ -556,17 +503,10 @@ function showLongWeather() {
                         + "°F");
                 };
 
-                if (unit == "metric") {
-                    $('#precipitation-22').html("Precipitation:<br>" + weatherNow.list[22].pop.toFixed(2)
-                        + " mm");
-                }
-                else if (unit == "imperial") {
-                    $('#precipitation-22').html("Precipitation:<br>" + (weatherNow.list[22].pop.toFixed(0) * 0.0393701).toFixed(2)
-                        + " inches");
-                };
+                $('#precipitation-22').html("Precipitation:<br>" + (weatherNow.list[22].pop * 100).toFixed(0)
+                    + "%");
 
                 $('#icon-22').html(`<img src="assets/icons/${weatherNow.list[22].weather[0].icon[0]}${weatherNow.list[22].weather[0].icon[1]}${dayNight}.png" alt="Weather icon">`);
-
 
                 if (unit == "metric") {
                     $('#wind-22').text("Wind: " + (weatherNow.list[22].wind.speed.toFixed(4) * 3.6).toFixed(2)
@@ -579,8 +519,6 @@ function showLongWeather() {
 
                 $('#humidity-22').text("Humidity: " + weatherNow.list[22].main.humidity.toFixed(0)
                     + "%");
-                console.log(weatherNow.list[22]);
-
 
                 // Day 3 starts
 
@@ -600,17 +538,10 @@ function showLongWeather() {
                         + "°F");
                 };
 
-                if (unit == "metric") {
-                    $('#precipitation-30').html("Precipitation:<br>" + weatherNow.list[30].pop.toFixed(2)
-                        + " mm");
-                }
-                else if (unit == "imperial") {
-                    $('#precipitation-30').html("Precipitation:<br>" + (weatherNow.list[30].pop.toFixed(0) * 0.0393701).toFixed(2)
-                        + " inches");
-                };
+                $('#precipitation-30').html("Precipitation:<br>" + (weatherNow.list[30].pop * 100).toFixed(0)
+                    + "%");
 
                 $('#icon-30').html(`<img src="assets/icons/${weatherNow.list[30].weather[0].icon[0]}${weatherNow.list[30].weather[0].icon[1]}${dayNight}.png" alt="Weather icon">`);
-
 
                 if (unit == "metric") {
                     $('#wind-30').text("Wind: " + (weatherNow.list[30].wind.speed.toFixed(4) * 3.6).toFixed(2)
@@ -623,8 +554,6 @@ function showLongWeather() {
 
                 $('#humidity-30').text("Humidity: " + weatherNow.list[30].main.humidity.toFixed(0)
                     + "%");
-                console.log(weatherNow.list[30]);
-
 
                 // Day 4 starts
 
@@ -644,17 +573,11 @@ function showLongWeather() {
                         + "°F");
                 };
 
-                if (unit == "metric") {
-                    $('#precipitation-38').html("Precipitation:<br>" + weatherNow.list[38].pop.toFixed(2)
-                        + " mm");
-                }
-                else if (unit == "imperial") {
-                    $('#precipitation-38').html("Precipitation:<br>" + (weatherNow.list[38].pop.toFixed(0) * 0.0393701).toFixed(2)
-                        + " inches");
-                };
+
+                $('#precipitation-38').html("Precipitation:<br>" + (weatherNow.list[38].pop * 100).toFixed(0)
+                    + "%");
 
                 $('#icon-38').html(`<img src="assets/icons/${weatherNow.list[38].weather[0].icon[0]}${weatherNow.list[38].weather[0].icon[1]}${dayNight}.png" alt="Weather icon">`);
-
 
                 if (unit == "metric") {
                     $('#wind-38').text("Wind: " + (weatherNow.list[38].wind.speed.toFixed(4) * 3.6).toFixed(2)
@@ -667,21 +590,16 @@ function showLongWeather() {
 
                 $('#humidity-38').text("Humidity: " + weatherNow.list[38].main.humidity.toFixed(0)
                     + "%");
-                console.log(weatherNow.list[38]);
 
-                //
                 y = -1;
-
 
                 header.setAttribute('class', 'header flex-horizontal');
                 main.setAttribute('class', 'mainbody');
                 loader.setAttribute('class', "hidden");
                 return;
 
-
                 //end of rendering
             } else {
-                console.log(`Unable to display weather`);
 
                 $('#temp-now').text("Error to get weather");
 
@@ -691,7 +609,6 @@ function showLongWeather() {
         })
 
         .catch((error) => {
-            console.log(`Unable to display 5 day forecast`);
 
             $('#temp-now').text("Sorry! Long forecast not available at this moment!");
 
@@ -699,8 +616,6 @@ function showLongWeather() {
             showLongWeather();
 
         });
-    console.log(weatherLink);
-    console.log("WeatherNow end:" + weatherNow);
 
 }
 
@@ -726,8 +641,6 @@ function addedUnit() {
     } else {
         initUnit();
     }
-
-    console.log(`Unit: ${unit}`);
     showWeather();
 };
 
@@ -743,18 +656,17 @@ function initUnit() {
         btnUnit.classList.add('btn-imperial');
 
     }
-    console.log(`Unit: ${unit}`);
-}
 
+}
+// Get data for autocomplete on search box, local data as api too slow and issues
 function collectCountries() {
 
     for (const country in countries) {
         all_countries.push(country.toUpperCase());
     }
 
-    console.log(all_countries);
 }
-
+// Filter only countries that match the input
 function filterCountriesNames(input) {
 
     let input_uc = input.toUpperCase();
@@ -766,65 +678,55 @@ function filterCountriesNames(input) {
         showAutocomplete(matched_items);
     }
 }
+// show autocomplete list
 
 function showAutocomplete(countriesList) {
-    // Clean old values
+
     $(matchList).html("");
-    // Animation
+
     $(matchList).animate({
         height: 'auto'
     }, "slow");
-    // Load new values
+
     for (let i = 0; i < countriesList.length; i++) {
         // Capitalize
         let country = countriesList[i].charAt(0).toUpperCase() + countriesList[i].toLowerCase().slice(1);
         $(matchList).append(`<div id="country_${i}">${country}</div>`);
         $("#country_" + i).on('click', () => {
+            search.value = (country);
             showCitiesList(country);
-            console.log(country);
         });
     }
 }
-
+//Show cities list based on country choice
 function showCitiesList(country) {
-    // Clean values
-    $(matchList).html("");
-    $(matchList).html("");
-    // append match list
 
+    $(matchList).html("");
+    $(matchList).html("");
     $(matchList).html(`<div>${country}:</div><p id="search-btn" placeholder="Choose city"></p><ul class="cities-list" id="cities-list"></ul>`);
-
-    // Load list
     countryNow = country;
-    console.log("Before anything countryNow: " + countryNow);
     //capitalize
-
     let words = countryNow.split(" ");
-    console.log("words:" + words);
 
     for (let i = 0; i < words.length; i++) {
         if (words[i] != "") {
             words[i] = words[i][0].toUpperCase() + words[i].substr(1);
         }
-
     }
 
     words.join(" ");
-    console.log(words);
+
     countryNow = words.join(" ");
-    console.log(`countryNow just before code: ${countryNow}`);
+
     code = (codes[countryNow]);
     citiesList = [];
     citiesList = (countries[countryNow]);
-    console.log(citiesList);
-    console.log("Code is:" + code + "Country is: " + countryNow);
     searchCity.classList.remove('hidden');
 }
-
+// Filter cities that match input
 function filterCityNames(inputc) {
 
     let words = inputc.split(" ");
-    console.log(words);
 
     for (let i = 0; i < words.length; i++) {
         if (words[i] != "") {
@@ -834,16 +736,13 @@ function filterCityNames(inputc) {
     }
 
     words.join(" ");
-    console.log(words);
     let input_uc = words.join(" ");
-    console.log(input_uc);
-
     let matched_cities = [];
     if (inputc) {
         matched_cities = citiesList.filter((item) => {
             return item.startsWith(input_uc);
         });
-        console.log("matched cities: " + matched_cities);
+
         searchCity.setAttribute('class', "show");
 
         $("#cities-list").html("");
@@ -852,7 +751,7 @@ function filterCityNames(inputc) {
             $("#cities-list").append(`<li id="cities_${i}">${city}</li>`);
             // set event listener when click in the city to change weather location displayed
             $("#cities_" + i).on('click', () => {
-                console.log(city);
+
                 // render now weather
                 $('#city-now').html(city + ", " + countryNow + ". ");
                 $('#state-now').text("");
@@ -861,14 +760,11 @@ function filterCityNames(inputc) {
                 search.value = "";
                 searchCity.value = "";
                 searchCity.setAttribute('class', 'hidden');
-                console.log(code);
 
-
-
+                y = -1;
                 x = -1;
                 cityAsked = (city);
                 //cityAsked = cityAsked.split(" ").join("&nbsp");//might be necessary if API changes
-                console.log(`cityAsked: ${cityAsked}`);
                 createHistory();
                 header.setAttribute('class', 'opacityLoading header flex-horizontal');
                 main.setAttribute('class', 'opacityLoading mainbody');
@@ -879,14 +775,10 @@ function filterCityNames(inputc) {
         }
     }
 }
-
-
+// get longitude and latitude to inform weather search by coordinates
 function getLongitudeLatitude() {
 
     latLongLink = (`https://api.openweathermap.org/geo/1.0/direct?q=${cityAsked},${code}&limit=1&appid=4dd7b444d35c5781eda9fee4131ca26d`);
-    console.log(`Testing latLongLink: ${latLongLink}`);
-
-    console.log("z:" + z);
 
     if (z <= -7) {
         //alert(`Unable to find your city, please choose another city!`);
@@ -900,22 +792,15 @@ function getLongitudeLatitude() {
 
     fetch(latLongLink)
 
-
         .then(response => response.json())
 
         .then((coordinates) => {
 
-
             coordinatesNow = coordinates[0];
             if (coordinatesNow.country === code) {
-                console.log(coordinatesNow);
+
                 latitudeAsked = coordinatesNow.lat;
                 longitudeAsked = coordinatesNow.lon;
-
-                const myJSON = JSON.stringify(coordinates);
-
-                console.log("Coordinates JSON:" + myJSON);
-
                 z = -1;
                 header.setAttribute('class', 'header flex-horizontal');
                 main.setAttribute('class', 'mainbody');
@@ -924,18 +809,16 @@ function getLongitudeLatitude() {
                 showWeather();
                 return;
             } else {
-                console.log(`Unable to display coordinates`);
-                $('#temp-now').text("Error to get coordinates!");
+
+                $('#temp-now').text("Error to get coordinates! Try again later.");
                 z--;
                 getLongitudeLatitude();
             }
         })
 
         .catch((error) => {
-            console.log(`Unable to display coordinates`);
-            console.log("Didn't find your coordinates");
-            $('#temp-now').text("Error to get coordinates!");
 
+            $('#temp-now').text("Error to get coordinates! Try again later.");
             z--;
             getLongitudeLatitude();
 
@@ -949,12 +832,9 @@ var q = -1;
 var timeLink;
 function getTime() {
     //timeLink = (`http://api.geonames.org/timezoneJSON?lat=${latitudeAsked}&lng=${longitudeAsked}&username=cdennis27`);
-    //console.log(`Testing timeLink: ${timeLink}`);
+    //console.log(`Testing timeLink: ${timeLink}`);Unsafe source causing issues at moment
 
     timeLink = (`https://api.timezonedb.com/v2.1/get-time-zone?key=2562DLSB4X6P&format=json&by=position&lat=${latitudeAsked}&lng=${longitudeAsked}`);
-    console.log(`Testing timeLink: ${timeLink}`);
-
-    console.log("q:" + q);
 
     if (q <= -7) {
         //alert(`Unable to find your city, please choose another city!`);
@@ -962,64 +842,48 @@ function getTime() {
         main.setAttribute('class', 'mainbody');
         loader.setAttribute('class', "hidden");
         q = -1;
-        $('#date').text(`Unable to get the local time!`);
         return;
     }
 
     fetch(timeLink)
 
-
         .then(response => response.json())
 
         .then((timeHere) => {
 
-
-
             if (timeHere.countryCode === code) {
 
                 timeWhere = timeHere.formatted;
-                console.log(`Time in this city: ${timeWhere}`);
-
                 q = -1;
                 header.setAttribute('class', 'header flex-horizontal');
                 main.setAttribute('class', 'mainbody');
                 loader.setAttribute('class', "hidden");
                 convertTime();
-
                 $('#date').text(`${timeWhere}`);
-
                 timeWhere = timeWhere.split('');
                 hourIcon = timeWhere[13] + timeWhere[14];
-                console.log(`Time splitted: ${timeWhere}`);
                 showWeather();
-                console.log(timeWhere);
-                const myJSON = JSON.stringify(timeWhere);
-                console.log("Time JSON:" + myJSON);
                 return;
+
             } else {
-                console.log(`Unable to display this city time and date`);
-                $('#temp-now').text("Error to get time and date in this city!");
+
+                $('#date').text(`Unable to get the local time at this time!`);
                 q--;
                 getTime();
             }
         })
 
         .catch((error) => {
-            console.log(`Unable to display time in this city`);
-            $('#temp-now').text("Error to get coordinates!");
+
+            $('#date').text(`Unable to get the local time at this time!`);
             q--;
             getTime();
-
         });
-
 }
-var dateFiveDay;
-
+// convert time format can be moded as a module in the future
 const convertTime = () => {
 
     let time = timeWhere;
-
-
     var year = time[0] + time[1] + time[2] + time[3];
     var month = time[5] + time[6];
     var day = time[8] + time[9];
@@ -1051,7 +915,6 @@ const convertTime = () => {
     } else if (month == 12) {
         month = "Dec";
     };
-    console.log(month);
 
     time = (month + " " + day + ", " + year + " " + hour + ":" + minute);
     dateFiveDay = (month + " " + day + ", " + year);
@@ -1060,33 +923,28 @@ const convertTime = () => {
 };
 
 // create local data for shortcut buttons
-var repeatCity;
-var repeatCode;
+
 function createHistory() {
     let length;
     savedTowns = JSON.parse(localStorage.getItem("savedTowns"));
     repeatCity = undefined;
     repeatCode = undefined;
-    //debugger;
+
     if (savedTowns == null || savedTowns == undefined) {
         savedTowns = { "city": [cityAsked], "code": [code] };
         length = 0;
         localStorage.setItem("savedTowns", JSON.stringify(savedTowns));
 
-        console.log(savedTowns);
         renderHistory();
         return;
+
     } else {
         length = savedTowns.city.length;
 
-        console.log(`city: ${cityAsked} code: ${code}`);
         //possible bug will be fixed soon adding for loop to fix
         repeatCity = savedTowns.city.filter(item => item == cityAsked);
-
         repeatCode = savedTowns.code.filter(item => item == code);
 
-
-        console.log(repeatCity);
         if (repeatCity[0] == cityAsked && repeatCode[0] == code) {
             return;
         }
@@ -1094,18 +952,10 @@ function createHistory() {
 
     if (length < 20 && length > 0) {
         let i = (length);
-        //savedTowns.city[i] = cityAsked;
-        //savedTowns.code[i] = code;
 
-        //savedTowns.city.splice(i, 1);
         savedTowns.city.unshift(cityAsked);
         savedTowns.code.unshift(code);
-
-        //savedTowns[i] = {"city":[cityAsked], "code":[code]};
-
         localStorage.setItem("savedTowns", JSON.stringify(savedTowns));
-
-        console.log(savedTowns);
         renderHistory();
 
     } else if (length >= 20) {
@@ -1114,27 +964,19 @@ function createHistory() {
         savedTowns.city.unshift(cityAsked);
         savedTowns.code.unshift(code);
         localStorage.setItem("savedTowns", JSON.stringify(savedTowns));
-
-        console.log(savedTowns);
         renderHistory();
     };
 
-
 };
-
+//Append short cut buttons
 function renderHistory() {
-    //savedTowns.push({city:[city], code:[code]});
-    //savedTowns = JSON.parse(localStorage.getItem("savedTowns"));
+
     let length = 0;
 
     savedTowns = JSON.parse(localStorage.getItem("savedTowns"));
     $(".historic-buttons").html("");
     if (savedTowns != null || savedTowns != undefined) {
         length = savedTowns.city.length;
-
-        console.log(savedTowns);
-        console.log(savedTowns.city[0]);
-        console.log(savedTowns.code[0]);
     };
 
     if (savedTowns == null || savedTowns == undefined) {
@@ -1150,27 +992,21 @@ function renderHistory() {
 
             $("#short_" + i).on('click', () => {
 
-
                 cityAsked = savedTowns.city[i];
-
                 code = savedTowns.code[i];
-                console.log(`city: ${city}, code: ${code}`);
-
                 // render now weather
                 $('#city-now').text(city + ", " + code + ". ");
                 $('#state-now').text("");
-
                 $("#cities-list").text("");
                 $("#match-list").text("");
                 search.value = "";
                 searchCity.value = "";
                 searchCity.setAttribute('class', 'hidden');
-                //debugger;
+
+                y = -1;
                 x = -1;
                 cityAsked = (city);
                 //cityAsked = cityAsked.split(" ").join("&nbsp");//might be necessary if API changes
-                console.log(`cityAsked: ${cityAsked}`);
-
                 header.setAttribute('class', 'opacityLoading header flex-horizontal');
                 main.setAttribute('class', 'opacityLoading mainbody');
                 loader.setAttribute('class', "show");
@@ -1180,7 +1016,7 @@ function renderHistory() {
         }
     }
 };
-
+// Delete local data for shortcut buttons
 function clearHistory() {
 
     search.value = "";
