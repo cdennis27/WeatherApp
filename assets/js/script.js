@@ -30,7 +30,7 @@ var y = -1;
 var timeWhere = [];
 var portionDay = [];
 var savedTowns = localStorage.getItem("savedTowns");
-
+var hourIcon;
 // Functions on load:
 showInit();
 
@@ -130,7 +130,7 @@ function showCity() {
 function showWeather() {
     weatherLink = (`https://api.openweathermap.org/data/2.5/weather?lat=${latitudeAsked}&lon=${longitudeAsked}&appid=4dd7b444d35c5781eda9fee4131ca26d&units=${unit}`);
     console.log(`Testing weatherLink: ${weatherLink}`);
-
+    
     //weatherLink = (`https://api.openweathermap.org/data/2.5/forecast?q=${cityAsked}&mode=json&units=metric&appid=4dd7b444d35c5781eda9fee4131ca26d`);
     //console.log("weatherLink here: " + weatherLink);
     console.log("x:" + x);
@@ -190,9 +190,19 @@ function showWeather() {
                     $('#precipitation-now').text("Condition: " + weatherNow.weather[0].description //(weatherNow.pop.toFixed(0) * 0.0393701).toFixed(2)
                         + "");//inches
                 };
-
-                $('#iconNow').html(`<img src="assets/icons/${weatherNow.weather[0].icon}.png" alt="Weather icon">`);
-
+                
+                console.log(`icon time: ${hourIcon}`);
+                if (hourIcon != undefined || hourIcon != null) {
+                    let dayNight = "d";
+                    if (hourIcon >= 6 && hourIcon < 18) {
+                        dayNight = "d";
+                    } else {
+                        dayNight = "n";
+                    };
+                    $('#iconNow').html(`<img src="assets/icons/${weatherNow.weather[0].icon[0]}${weatherNow.weather[0].icon[1]}${dayNight}.png" alt="Weather icon">`);
+                } else {
+                    $('#iconNow').html(`<img src="assets/icons/${weatherNow.weather[0].icon}.png" alt="Weather icon">`);
+                };
 
 
 
@@ -257,8 +267,14 @@ function showLongWeather() {
             if (weatherNow.cod === "200") {
                 console.log(weatherNow);
                 //time-0
+                let dayNight = "";
                 let portion = weatherNow.list[0].dt_txt.split('');
                 portion = portion[11] + portion[12];
+                if (portion >= 6 && portion < 18) {
+                    dayNight = "d";
+                } else {
+                    dayNight = "n";
+                };
                 if (portion > 12) {
                     portion = portion - 12;
                     $('#time-0').text(portion
@@ -295,11 +311,18 @@ function showLongWeather() {
                         + " inches");
                 };
 
-                $('#icon-0').html(`<img src="assets/icons/${weatherNow.list[0].weather[0].icon}.png" alt="Weather icon">`);
+
+
+                $('#icon-0').html(`<img src="assets/icons/${weatherNow.list[0].weather[0].icon[0]}${weatherNow.list[0].weather[0].icon[1]}${dayNight}.png" alt="Weather icon">`);
 
                 //time-1
                 portion = weatherNow.list[1].dt_txt.split('');
                 portion = portion[11] + portion[12];
+                if (portion >= 6 && portion < 18) {
+                    dayNight = "d";
+                } else {
+                    dayNight = "n";
+                };
                 if (portion > 12) {
                     portion = portion - 12;
                     $('#time-1').text(portion
@@ -335,12 +358,17 @@ function showLongWeather() {
                         + " inches");
                 };
 
-                $('#icon-1').html(`<img src="assets/icons/${weatherNow.list[1].weather[0].icon}.png" alt="Weather icon">`);
+
+                $('#icon-1').html(`<img src="assets/icons/${weatherNow.list[1].weather[0].icon[0]}${weatherNow.list[1].weather[0].icon[1]}${dayNight}.png" alt="Weather icon">`);
 
                 //time-2
                 portion = weatherNow.list[2].dt_txt.split('');
                 portion = portion[11] + portion[12];
-
+                if (portion >= 6 && portion < 18) {
+                    dayNight = "d";
+                } else {
+                    dayNight = "n";
+                };
                 if (portion > 12) {
                     portion = portion - 12;
                     $('#time-2').text(portion
@@ -377,12 +405,17 @@ function showLongWeather() {
                         + " inches");
                 };
 
-                $('#icon-2').html(`<img src="assets/icons/${weatherNow.list[2].weather[0].icon}.png" alt="Weather icon">`);
+                $('#icon-2').html(`<img src="assets/icons/${weatherNow.list[2].weather[0].icon[0]}${weatherNow.list[2].weather[0].icon[1]}${dayNight}.png" alt="Weather icon">`);
                 console.log(weatherNow.list[2].weather[0].icon);
 
                 //time-3
                 portion = weatherNow.list[3].dt_txt.split('');
                 portion = portion[11] + portion[12];
+                if (portion >= 6 && portion < 18) {
+                    dayNight = "d";
+                } else {
+                    dayNight = "n";
+                };
                 if (portion > 12) {
                     portion = portion - 12;
                     $('#time-3').text(portion
@@ -418,7 +451,7 @@ function showLongWeather() {
                         + " inches");
                 };
 
-                $('#icon-3').html(`<img src="assets/icons/${weatherNow.list[3].weather[0].icon}.png" alt="Weather icon">`);
+                $('#icon-3').html(`<img src="assets/icons/${weatherNow.list[3].weather[0].icon[0]}${weatherNow.list[3].weather[0].icon[1]}${dayNight}.png" alt="Weather icon">`);
                 console.log(weatherNow.list[3].weather[0].icon);
                 // Day 0 starts
 
@@ -446,8 +479,8 @@ function showLongWeather() {
                     $('#precipitation-6').html("Precipitation:<br>" + (weatherNow.list[6].pop.toFixed(0) * 0.0393701).toFixed(2)
                         + " inches");
                 };
-
-                $('#icon-6').html(`<img src="assets/icons/${weatherNow.list[6].weather[0].icon}.png" alt="Weather icon">`);
+                dayNight = "d";
+                $('#icon-6').html(`<img src="assets/icons/${weatherNow.list[6].weather[0].icon[0]}${weatherNow.list[6].weather[0].icon[1]}${dayNight}.png" alt="Weather icon">`);
 
 
                 if (unit == "metric") {
@@ -489,7 +522,7 @@ function showLongWeather() {
                         + " inches");
                 };
 
-                $('#icon-14').html(`<img src="assets/icons/${weatherNow.list[14].weather[0].icon}.png" alt="Weather icon">`);
+                $('#icon-14').html(`<img src="assets/icons/${weatherNow.list[14].weather[0].icon[0]}${weatherNow.list[14].weather[0].icon[1]}${dayNight}.png" alt="Weather icon">`);
 
 
                 if (unit == "metric") {
@@ -532,7 +565,7 @@ function showLongWeather() {
                         + " inches");
                 };
 
-                $('#icon-22').html(`<img src="assets/icons/${weatherNow.list[22].weather[0].icon}.png" alt="Weather icon">`);
+                $('#icon-22').html(`<img src="assets/icons/${weatherNow.list[22].weather[0].icon[0]}${weatherNow.list[22].weather[0].icon[1]}${dayNight}.png" alt="Weather icon">`);
 
 
                 if (unit == "metric") {
@@ -576,7 +609,7 @@ function showLongWeather() {
                         + " inches");
                 };
 
-                $('#icon-30').html(`<img src="assets/icons/${weatherNow.list[30].weather[0].icon}.png" alt="Weather icon">`);
+                $('#icon-30').html(`<img src="assets/icons/${weatherNow.list[30].weather[0].icon[0]}${weatherNow.list[30].weather[0].icon[1]}${dayNight}.png" alt="Weather icon">`);
 
 
                 if (unit == "metric") {
@@ -620,7 +653,7 @@ function showLongWeather() {
                         + " inches");
                 };
 
-                $('#icon-38').html(`<img src="assets/icons/${weatherNow.list[38].weather[0].icon}.png" alt="Weather icon">`);
+                $('#icon-38').html(`<img src="assets/icons/${weatherNow.list[38].weather[0].icon[0]}${weatherNow.list[38].weather[0].icon[1]}${dayNight}.png" alt="Weather icon">`);
 
 
                 if (unit == "metric") {
@@ -956,9 +989,9 @@ function getTime() {
                 $('#date').text(`${timeWhere}`);
 
                 timeWhere = timeWhere.split('');
-
+                hourIcon = timeWhere[13] + timeWhere[14];
                 console.log(`Time splitted: ${timeWhere}`);
-
+                showWeather();
                 console.log(timeWhere);
                 const myJSON = JSON.stringify(timeWhere);
                 console.log("Time JSON:" + myJSON);
@@ -981,9 +1014,11 @@ function getTime() {
 
 }
 var dateFiveDay;
+
 const convertTime = () => {
 
     let time = timeWhere;
+
 
     var year = time[0] + time[1] + time[2] + time[3];
     var month = time[5] + time[6];
