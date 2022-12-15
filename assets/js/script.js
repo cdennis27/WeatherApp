@@ -44,6 +44,8 @@ $('#date').text(today.format('hh : mm a. MMM D, YYYY.'));
 
 addUnit.addEventListener("click", addedUnit);
 
+clearMatchListBtn.addEventListener("click", clearHistory);
+
 $(searchCity).on('input', function (element) {
     filterCityNames(element.target.value);
 });
@@ -819,12 +821,13 @@ function filterCityNames(inputc) {
             $("#cities_" + i).on('click', () => {
                 console.log(city);
                 // render now weather
-                $('#city-now').text(city + ", " + countryNow + ". ");
+                $('#city-now').html(city + ", " + countryNow + ". ");
                 $('#state-now').text("");
                 $("#cities-list").text("");
                 $("#match-list").text("");
-                $(search).text("");
-                $(searchCity).text("");
+                search.value = "";
+                searchCity.value = "";
+                searchCity.setAttribute('class', 'hidden');
                 console.log(code);
 
 
@@ -1124,8 +1127,9 @@ function renderHistory() {
 
                 $("#cities-list").text("");
                 $("#match-list").text("");
-                $(search).text("");
-                $(searchCity).text("");
+                search.value = "";
+                searchCity.value = "";
+                searchCity.setAttribute('class', 'hidden');
                 //debugger;
                 x = -1;
                 cityAsked = (city);
@@ -1144,6 +1148,11 @@ function renderHistory() {
 
 function clearHistory() {
 
+    search.value = "";
+    searchCity.value = "";
+    searchCity.setAttribute('class', 'hidden');
+    localStorage.removeItem("savedTowns");
+    renderHistory();
 };
 
 
