@@ -90,6 +90,7 @@ body {
     border-style: solid;
     border-width: 1px;
     color: white;
+    min-width: 500px;
 }
 
 .logo {
@@ -189,13 +190,15 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    
+
 }
 
 #search-cities {
     margin-top: 10px;
     margin-bottom: 5px;
     width: 100%;
+    max-width: 500px;
+    min-width: 300px;
 }
 
 .search-container {
@@ -208,8 +211,8 @@ body {
     border-style: solid;
     width: 100%;
     height: 25px;
-
-
+    max-width: 500px;
+    min-width: 300px;
 }
 
 .search-box {
@@ -217,6 +220,8 @@ body {
     flex-direction: column;
     width: 100%;
     margin-top: 10px;
+    max-width: 500px;
+    min-width: 300px;
 }
 
 #search-btn {
@@ -270,6 +275,32 @@ body {
     color: rgb(151, 158, 228);
 }
 
+.historic-buttons {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    max-height: 600px;
+    min-height: 0;
+    margin-top: 10px;
+}
+
+.historic-buttons li {
+    all: unset;
+    padding: 5px;
+    padding-left: 15px;
+    padding-right: 15px;
+    background: linear-gradient(var(--topBg), 60%, var(--bottomBg));
+    cursor: pointer;
+    color: white;
+    border-radius: 10px;
+}
+
+.historic-buttons li:hover {
+    cursor: pointer;
+    color: rgb(151, 158, 228);
+}
+
 .cities-list {
     max-height: 500px;
     min-height: auto;
@@ -287,8 +318,8 @@ body {
 #iconNow img {
     width: 200px;
     height: 200px;
-    
-    
+
+
 }
 
 .now {
@@ -304,14 +335,14 @@ body {
         "nows5 img";
     grid-gap: 0px;
     grid-template-columns: 7fr 3fr;
-    
-    
+
+
 }
 
 #city {
     grid-area: city;
     font-size: 1.05em;
-    
+
 }
 
 #iconNow {
@@ -320,27 +351,27 @@ body {
 
 #temp-now {
     grid-area: nows1;
-    
+
 }
 
 #wind-now {
     grid-area: nows2;
-    
+
 }
 
 #humidity-now {
     grid-area: nows3;
-    
+
 }
 
 #visibility-now {
     grid-area: nows4;
-    
+
 }
 
 #precipitation-now {
     grid-area: nows5;
-    
+
 }
 
 .today {
@@ -360,7 +391,10 @@ body {
     font-size: 1.05em;
 }
 
-#time-0, #time-1, #time-2, #time-3 {
+#time-0,
+#time-1,
+#time-2,
+#time-3 {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -382,22 +416,31 @@ body {
     grid-area: time-3;
 }
 
-.time-0, .time-1, .time-2, .time-3 {
+.time-0,
+.time-1,
+.time-2,
+.time-3 {
     font-size: 1em;
     text-align: center;
     justify-content: center;
     padding: 5px;
 }
 
-#precipitation-0, #precipitation-1, #precipitation-2, #precipitation-3 {
+#precipitation-0,
+#precipitation-1,
+#precipitation-2,
+#precipitation-3 {
     font-size: 0.7em;
 }
 
-#icon-0 img, #icon-1 img, #icon-2 img, #icon-3 img {
+#icon-0 img,
+#icon-1 img,
+#icon-2 img,
+#icon-3 img {
     width: 100px;
     height: 100px;
-    
-    
+
+
 }
 
 .five-day {
@@ -405,10 +448,14 @@ body {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
     align-items: center;
-    
+
 }
 
-.day-0, .day-1, .day-2, .day-3, .day-4 {
+.day-0,
+.day-1,
+.day-2,
+.day-3,
+.day-4 {
     display: flex;
     flex-direction: column;
     text-align: center;
@@ -417,15 +464,23 @@ body {
     font-size: 0.6em;
 }
 
-#temp-6, #temp-14, #temp-22, #temp-30, #temp-38 {
+#temp-6,
+#temp-14,
+#temp-22,
+#temp-30,
+#temp-38 {
     font-size: 1.5em;
     padding: 5px;
 }
 
-#icon-6 img, #icon-14 img, #icon-22 img, #icon-30 img, #icon-38 img {
+#icon-6 img,
+#icon-14 img,
+#icon-22 img,
+#icon-30 img,
+#icon-38 img {
     width: 60px;
     height: 60px;
-        
+
 }
 
 .opacityLoading {
@@ -446,6 +501,7 @@ body {
     height: 200px;
     margin-right: 20px;
     margin-left: 20px;
+    min-width: 500px;
 }
 
 .footer a {
@@ -458,7 +514,18 @@ body {
     color: rgb(151, 158, 228);
 }
 
-@media (max-width: 880px) {
+@media (max-width: 1100px) {
+
+    .day-0,
+    .day-1,
+    .day-2,
+    .day-3,
+    .day-4 {
+        scale: 80%;
+    }
+}
+
+@media (max-width: 950px) {
 
     html {
         min-height: 100vh;
@@ -489,6 +556,30 @@ body {
         margin-left: auto;
     }
 
+
+
+    .day-0,
+    .day-1,
+    .day-2,
+    .day-3,
+    .day-4 {
+        scale: 80%;
+    }
+
+}
+
+@media (max-width: 660px) {
+    .now {
+        font-size: 0.7em;
+    }
+
+    .today {
+        font-size: 0.6em;
+    }
+
+    .five-day {
+        font-size: 0.9em;
+    }
 
 
 }
@@ -522,14 +613,63 @@ body {
     .logo {
         font-size: 1rem;
     }
+
+    .now {
+        font-size: 0.5em;
+    }
+
+    .today {
+        font-size: 0.5em;
+    }
+
+    .five-day {
+        font-size: 0.8em;
+    }
+
+    .day-0,
+    .day-1,
+    .day-2,
+    .day-3,
+    .day-4 {
+        scale: 80%;
+    }
+
+    icon-6 img,
+    #icon-14 img,
+    #icon-22 img,
+    #icon-30 img,
+    #icon-38 img {
+        width: 45px;
+        height: 45px;
+    }
+
+    #icon-0 img,
+    #icon-1 img,
+    #icon-2 img,
+    #icon-3 img {
+        width: 65px;
+        height: 65px;
+    }
+
+    #iconNow img {
+        width: 125px;
+        height: 125px;
+    }
+
+    .search-box,
+    #search-cities,
+    .search-container {
+        max-width: 350px;
+    }
+    
 }
 
-@media (max-width: 476px) {
+@media (max-width: 515px) {
 
     .flex-horizontal {
         font-size: 0.6rem;
         max-width: 600px;
-        min-width: 330px;
+        
     }
 
     .btn-unit {
@@ -543,7 +683,7 @@ body {
 
 }
 
-@media (max-width: 340px) {
+@media (max-width: 500px) {
 
     .flex-horizontal {
         font-size: 0.6rem;
@@ -565,4 +705,3 @@ body {
         right: auto;
     }
 }
-

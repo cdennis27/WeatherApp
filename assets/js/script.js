@@ -14,7 +14,6 @@ const loader = document.querySelector('#loader');
 const search = document.querySelector('#search-box');
 const matchList = document.querySelector('#match-list');
 const clearMatchListBtn = document.querySelector('#clear-match-list');
-const searchBtn = document.querySelector('#search-btn');
 let all_countries = [];
 const countries_json = [];
 var storedCities = localStorage.getItem("storedCities");
@@ -30,12 +29,14 @@ var coordinatesNow = [];
 var y = -1;
 var timeWhere = [];
 var portionDay = [];
-var savedTowns = {"city" :"London", "code" :"GB"};//local storage
+var savedTowns = localStorage.getItem("savedTowns");
 
 // Functions on load:
 showInit();
 
 initUnit();
+
+renderHistory();
 
 // Event Listeners
 
@@ -96,7 +97,6 @@ function showCity() {
                 console.log('This is your city: ' + locationNow.city);
                 $('#city-now').text(locationNow.city + ", ");
                 $('#state-now').text(locationNow.state + ", ");
-                $('#search-btn').text(locationNow.city);
 
                 cityAsked = (locationNow.city);
                 cityAsked = cityAsked.split(" ").join("&nbsp");
@@ -238,7 +238,7 @@ function showLongWeather() {
     console.log("y:" + y);
 
     if (y <= -7) {
-        alert(`Unable to find your city, please choose your city!`);
+        //alert(`Unable to find your city, please choose your city!`);
         header.setAttribute('class', 'header flex-horizontal');
         main.setAttribute('class', 'mainbody');
         loader.setAttribute('class', "hidden");
@@ -716,6 +716,7 @@ function collectCountries() {
     for (const country in countries) {
         all_countries.push(country.toUpperCase());
     }
+
     console.log(all_countries);
 }
 
@@ -811,36 +812,33 @@ function filterCityNames(inputc) {
         searchCity.setAttribute('class', "show");
 
         $("#cities-list").html("");
-        $('#search-btn').text("Choose a city");
         for (let i = 0; i < matched_cities.length; i++) {
             let city = matched_cities[i];
             $("#cities-list").append(`<li id="cities_${i}">${city}</li>`);
             // set event listener when click in the city to change weather location displayed
             $("#cities_" + i).on('click', () => {
-                $('#search-btn').text(city);
                 console.log(city);
                 // render now weather
                 $('#city-now').text(city + ", " + countryNow + ". ");
                 $('#state-now').text("");
-                $('#search-btn').text(city);
                 $("#cities-list").text("");
                 $("#match-list").text("");
                 $(search).text("");
                 $(searchCity).text("");
                 console.log(code);
-                debugger;
-                createHistory();
-                
+
+
+
                 x = -1;
                 cityAsked = (city);
                 //cityAsked = cityAsked.split(" ").join("&nbsp");//might be necessary if API changes
                 console.log(`cityAsked: ${cityAsked}`);
-
+                createHistory();
                 header.setAttribute('class', 'opacityLoading header flex-horizontal');
                 main.setAttribute('class', 'opacityLoading mainbody');
                 loader.setAttribute('class', "show");
                 getLongitudeLatitude();
-                
+
             });
         }
     }
@@ -855,7 +853,7 @@ function getLongitudeLatitude() {
     console.log("z:" + z);
 
     if (z <= -7) {
-        alert(`Unable to find your city, please choose another city!`);
+        //alert(`Unable to find your city, please choose another city!`);
         header.setAttribute('class', 'header flex-horizontal');
         main.setAttribute('class', 'mainbody');
         loader.setAttribute('class', "hidden");
@@ -871,7 +869,7 @@ function getLongitudeLatitude() {
 
         .then((coordinates) => {
 
-            //debugger;
+
             coordinatesNow = coordinates[0];
             if (coordinatesNow.country === code) {
                 console.log(coordinatesNow);
@@ -923,12 +921,12 @@ function getTime() {
     console.log("q:" + q);
 
     if (q <= -7) {
-        alert(`Unable to find your city, please choose another city!`);
+        //alert(`Unable to find your city, please choose another city!`);
         header.setAttribute('class', 'header flex-horizontal');
         main.setAttribute('class', 'mainbody');
         loader.setAttribute('class', "hidden");
         q = -1;
-
+        $('#date').text(`Unable to get the local time!`);
         return;
     }
 
@@ -939,7 +937,7 @@ function getTime() {
 
         .then((timeHere) => {
 
-            //debugger;
+
 
             if (timeHere.countryCode === code) {
 
@@ -1023,49 +1021,122 @@ const convertTime = () => {
     return;
 };
 
+// create local data for shortcut buttons
+var repeatCity;
+var repeatCode;
 function createHistory() {
-    
-    if (savedTowns.length < 20) {
-        let i = (savedTowns.length + 1);
-        savedTowns[i] = {city:[city], code:[code]};
-console.log(savedTowns);
+    let length;
+    savedTowns = JSON.parse(localStorage.getItem("savedTowns"));
+    repeatCity = undefined;
+    repeatCode = undefined;
+    //debugger;
+    if (savedTowns == null || savedTowns == undefined) {
+        savedTowns = { "city": [cityAsked], "code": [code] };
+        length = 0;
+        localStorage.setItem("savedTowns", JSON.stringify(savedTowns));
 
-};
+        console.log(savedTowns);
+        renderHistory();
+        return;
+    } else {
+        length = savedTowns.city.length;
+
+        console.log(`city: ${cityAsked} code: ${code}`);
+        //possible bug will be fixed soon adding for loop to fix
+        repeatCity = savedTowns.city.filter(item => item == cityAsked);
+
+        repeatCode = savedTowns.code.filter(item => item == code);
+
+
+        console.log(repeatCity);
+        if (repeatCity[0] == cityAsked && repeatCode[0] == code) {
+            return;
+        }
+    };
+
+    if (length < 20 && length > 0) {
+        let i = (length);
+        //savedTowns.city[i] = cityAsked;
+        //savedTowns.code[i] = code;
+
+        //savedTowns.city.splice(i, 1);
+        savedTowns.city.unshift(cityAsked);
+        savedTowns.code.unshift(code);
+
+        //savedTowns[i] = {"city":[cityAsked], "code":[code]};
+
+        localStorage.setItem("savedTowns", JSON.stringify(savedTowns));
+
+        console.log(savedTowns);
+        renderHistory();
+
+    } else if (length >= 20) {
+        savedTowns.city.pop();
+        savedTowns.code.pop();
+        savedTowns.city.unshift(cityAsked);
+        savedTowns.code.unshift(code);
+        localStorage.setItem("savedTowns", JSON.stringify(savedTowns));
+
+        console.log(savedTowns);
+        renderHistory();
+    };
 
 
 };
 
 function renderHistory() {
-    if (savedTowns.length > 0) {
-        for (let i = 0; i < savedTowns.length; i++) {
+    //savedTowns.push({city:[city], code:[code]});
+    //savedTowns = JSON.parse(localStorage.getItem("savedTowns"));
+    let length = 0;
+
+    savedTowns = JSON.parse(localStorage.getItem("savedTowns"));
+    $(".historic-buttons").html("");
+    if (savedTowns != null || savedTowns != undefined) {
+        length = savedTowns.city.length;
+
+        console.log(savedTowns);
+        console.log(savedTowns.city[0]);
+        console.log(savedTowns.code[0]);
+    };
+
+    if (savedTowns == null || savedTowns == undefined) {
+        return;
+    }
+    if (length > 0) {
+        for (let i = 0; i < savedTowns.city.length; i++) {
 
             let city = savedTowns.city[i];
+            let codeTemp = savedTowns.code[i];
 
-            $(".historic-buttons").append(`<li id="short_${i}">${city}</li>`);
+            $(".historic-buttons").append(`<li id="short_${i}">${city},${codeTemp}</li>`);
 
             $("#short_" + i).on('click', () => {
-                $('#search-btn').text(city);
-                console.log(city);
+
+
+                cityAsked = savedTowns.city[i];
+
                 code = savedTowns.code[i];
+                console.log(`city: ${city}, code: ${code}`);
 
                 // render now weather
-                $('#city-now').text(city + ", " + countryNow + ". ");
+                $('#city-now').text(city + ", " + code + ". ");
                 $('#state-now').text("");
-                $('#search-btn').text(city);
+
                 $("#cities-list").text("");
                 $("#match-list").text("");
                 $(search).text("");
                 $(searchCity).text("");
+                //debugger;
                 x = -1;
                 cityAsked = (city);
                 //cityAsked = cityAsked.split(" ").join("&nbsp");//might be necessary if API changes
                 console.log(`cityAsked: ${cityAsked}`);
-        
+
                 header.setAttribute('class', 'opacityLoading header flex-horizontal');
                 main.setAttribute('class', 'opacityLoading mainbody');
                 loader.setAttribute('class', "show");
                 getLongitudeLatitude();
-                
+
             });
         }
     }
