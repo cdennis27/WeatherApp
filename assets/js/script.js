@@ -151,11 +151,11 @@ function showWeather() {
                         + "°F");
                 };
                 if (unit == "metric") {
-                    $('#wind-now').text("Wind speed: " + (weatherNow.wind.speed.toFixed(4) * 3.6).toFixed(2)
+                    $('#wind-now').text("Wind: " + (weatherNow.wind.speed.toFixed(4) * 3.6).toFixed(2)
                         + " KM/H");
                 }
                 else if (unit == "imperial") {
-                    $('#wind-now').text("Wind speed: " + weatherNow.wind.speed.toFixed(2)
+                    $('#wind-now').text("Wind: " + weatherNow.wind.speed.toFixed(2)
                         + " MP/H");
                 };
 
